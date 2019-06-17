@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/log_test.dir/log_test.o  -o log_test  -L/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test ../libCyclone_base.a -lpthread -lrt 

@@ -1,0 +1,6 @@
+/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test/CMakeFiles/rebuild_cache.dir
+/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test/CMakeFiles/edit_cache.dir
+/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test/CMakeFiles/Cyclone_base.dir
+/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test/test/CMakeFiles/rebuild_cache.dir
+/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test/test/CMakeFiles/edit_cache.dir
+/home/raki/Desktop/C++/MyProject/Cyclone/src/base/test/test/CMakeFiles/log_test.dir
