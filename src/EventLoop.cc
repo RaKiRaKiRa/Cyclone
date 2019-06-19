@@ -10,6 +10,9 @@
 #include "EventLoop.h"
 // 当前线程中的EventLoop, 保证one loop per thread
 __thread EventLoop *t_loopInThisThread = 0;
+//EventLoop中的poll等待毫秒数
+const int kPollTImeMs = 10000;
+
 
 EventLoop::EventLoop():
   loop_(false),
