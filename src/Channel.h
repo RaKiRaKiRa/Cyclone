@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-15 21:54
- * Last modified : 2019-06-18 14:54
+ * Last modified : 2019-06-23 16:59
  * Filename      : Channel.h
  * Description   : 
  **********************************************************/
@@ -54,6 +54,10 @@ public:
     //revents_ = ev;
     revents_ = std::move(ev);
   }
+  void setIndex(int idx)
+  {
+    index_ = std::move(idx);
+  }
 
   // 获得相关绑定信息
   int fd() const 
@@ -71,6 +75,10 @@ public:
   int revent() const 
   {
     return revents_;
+  }
+  int index() const
+  {
+    return index_;
   }
 
   // 开关读写事件,并通过EventLoop在Poller::UpdataChannel上更新事件列表和映射表
@@ -99,6 +107,10 @@ public:
     events_ = k_None;
     updata();
   }
+  bool isNoneEvent() const
+  {
+    return events_ == k_None;
+  }
 
 private:
   // 使loop_对Channel的变化进行修改
@@ -110,6 +122,7 @@ private:
   int       events_;
   int       revents_;
   bool      handling;//分发事件中,保证不会被析构
+  int       index_;  //在Poller中pollfds_储存位置的下标 或 Epoller中在epollfd_的状态(新加入?已存在需修改?准备删除?)
 
   //事件
   static const int k_None;

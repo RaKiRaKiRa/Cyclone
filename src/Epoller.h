@@ -28,15 +28,19 @@ public:
   
   void removeChannel(Channel* channel);
 
+  //维护和更新eventfd_   和channel_
   void updataChannel(Channel* channel);
+  
 
-  void fill_activeChannels(int activeNum, ChannelList* activeChannels);
 private:
+  void fill_activeChannels(int activeNum, ChannelList* activeChannels) const;
+
   const int eventList_InitialSize = 16;
 
 
   int epollfd_;
-  //存储epoll_wait返回值
+
+  //存储epoll_wait返回事件
   eventList events_;
 
 };

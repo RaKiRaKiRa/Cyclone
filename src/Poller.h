@@ -25,12 +25,13 @@ public:
 
   void removeChannel(Channel* channel);
 
+  //维护和更新pollfds__   和channel_
   void updataChannel(Channel* channel);
 
-  void fill_activeChannels(int activeNum, ChannelList* activeChannels);
 private:
-  //存储::poll返回值
-  pollfdList pollfds_;
+  void fill_activeChannels(int activeNum, ChannelList* activeChannels) const;
+
+  pollfdList pollfds_;//存储::poll监听的事件,乱序,由Channel::index存储其下标
 
 };
 

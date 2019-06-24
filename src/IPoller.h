@@ -34,9 +34,13 @@ public:
   virtual void poll(int timeout, ChannelList *activeChannels) = 0;
 
   //增删查,全是虚函数,因为分epoll和poll两种情况
+  
+
   virtual void removeChannel(Channel* channel) = 0;
 
+  //维护和更新pollfds_/eventfd_   和channel_
   virtual void updataChannel(Channel* channel) = 0;
+
 
   bool hasChannel(Channel* channel) const
   {
@@ -51,6 +55,7 @@ private:
 
 protected:
   virtual void fill_activeChannels(int activeNum, ChannelList* activeChannels) const = 0;
+  //Channel::fd : Channel*
   ChannelMap channels_;
   
 };
