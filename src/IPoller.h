@@ -39,15 +39,19 @@ public:
   virtual void removeChannel(Channel* channel) = 0;
 
   //维护和更新pollfds_/eventfd_   和channel_
-  virtual void updataChannel(Channel* channel) = 0;
+  virtual void updateChannel(Channel* channel) = 0;
 
 
   bool hasChannel(Channel* channel) const
   {
-    ChannelMap::const_iterator it = channels_.find(channel -> fd());
-    return it != channels_.end() && it -> second == channel;
+    ChannelMap::const_iterator it = channelsByFd_.find(channel -> fd());
+    return it != channelsByFd_.end() && it -> second == channel;
   }
 
+  void assertInLoop() const
+  {
+    loop_ -> assertInLoopThread();
+  }
   // 返回EventLoop指定的POLLER
   static IPoller* newPoller(EventLoop* loop);
 private:
@@ -56,7 +60,7 @@ private:
 protected:
   virtual void fill_activeChannels(int activeNum, ChannelList* activeChannels) const = 0;
   //Channel::fd : Channel*
-  ChannelMap channels_;
+  ChannelMap channelsByFd_;
   
 };
 
