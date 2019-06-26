@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-19 16:13
- * Last modified : 2019-06-19 16:57
+ * Last modified : 2019-06-24 15:03
  * Filename      : Poller.cc
  * Description   : 
  **********************************************************/
@@ -55,8 +55,8 @@ void Poller::fill_activeChannels(int activeNum, ChannelList *activeChannels) con
     if(it -> revents)
     {
       --activeNum;//减为0时退出循环,加速轮询
-      ChannelMap::const_iterator ch = channels_.find(it -> fd);//寻找触发事件的fd对应的Channel
-      assert(ch != channels_.end());//不可能找不到
+      ChannelMap::const_iterator ch = channelsByFd_.find(it -> fd);//寻找触发事件的fd对应的Channel
+      assert(ch != channelsByFd_.end());//不可能找不到
       Channel* channel = ch -> second;
       assert(channel -> fd() == it -> fd);//找错则报错
       //修改Channel的revent并加入activeChannels
@@ -66,11 +66,12 @@ void Poller::fill_activeChannels(int activeNum, ChannelList *activeChannels) con
   }
 }
 
-//维护和更新eventfd_   和channel_
-void Poller::updataChannel(Channel* channel)
+//维护和更新pollfd_   和channel_
+void Poller::updateChannel(Channel* channel)
 {
+  assertInLoop();
   //Channel初始index为-1,再加入监听后再改为其在pollfds_的下标
-  if(channel -> index() < 0)//未加入监听,则进行监听
+  if(channel -> index() < 0)//未加入监听,则加入监听 pollfds_
   {
     /*
      *struct pollfd {
@@ -86,12 +87,12 @@ void Poller::updataChannel(Channel* channel)
     pollfds_.push_back(pfd);
     int idx = static_cast<int>(pollfds_.size()) - 1;
     channel -> setIndex(idx);
-    channels_[pfd.fd] = channel;
+    channelsByFd_[pfd.fd] = channel;
   }
   else//已加入监听,进行更新
   {
-    assert(channels_.find(channel -> fd()) != channels_.end());
-    assert(channels_[channel -> fd()] == channel);
+    assert(channelsByFd_.find(channel -> fd()) != channelsByFd_.end());
+    assert(channelsByFd_[channel -> fd()] == channel);
 
     int idx = channel -> index();
     struct pollfd& pfd = pollfds_[idx];//引用
@@ -105,4 +106,9 @@ void Poller::updataChannel(Channel* channel)
     pfd.events  = static_cast<short>(channel -> event());
     pfd.revents = 0;
   }
+}
+
+void Poller::removeChannel(Channel* channel)
+{
+
 }

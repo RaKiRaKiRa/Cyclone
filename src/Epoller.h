@@ -29,10 +29,12 @@ public:
   void removeChannel(Channel* channel);
 
   //维护和更新eventfd_   和channel_
-  void updataChannel(Channel* channel);
+  void updateChannel(Channel* channel);
   
 
 private:
+  //封装epoll_ctl
+  void update(int op, Channel* channel);
   void fill_activeChannels(int activeNum, ChannelList* activeChannels) const;
 
   const int eventList_InitialSize = 16;

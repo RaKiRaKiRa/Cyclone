@@ -26,7 +26,7 @@ public:
   void removeChannel(Channel* channel);
 
   //维护和更新pollfds__   和channel_
-  void updataChannel(Channel* channel);
+  void updateChannel(Channel* channel);
 
 private:
   void fill_activeChannels(int activeNum, ChannelList* activeChannels) const;
