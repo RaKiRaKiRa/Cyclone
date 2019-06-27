@@ -81,31 +81,31 @@ public:
     return index_;
   }
 
-  // 开关读写事件,并通过EventLoop在Poller::UpdataChannel上更新事件列表和映射表
+  // 开关读写事件,并通过EventLoop在Poller::updateChannel上更新事件列表和映射表
   void enableRead()
   {
     events_ |= k_Read;
-    updata();
+    update();
   }
   void disableRead()
   {
     events_ &= ~k_Read;
-    updata();
+    update();
   }
   void enableWrite()
   {
     events_ |= k_Write;
-    updata();
+    update();
   }
   void disableWrite()
   {
     events_ &= ~k_Write;
-    updata();
+    update();
   }
   void disableAll()
   {
     events_ = k_None;
-    updata();
+    update();
   }
   bool isNoneEvent() const
   {
@@ -114,15 +114,16 @@ public:
 
 private:
   // 使loop_对Channel的变化进行修改
-  void updata();
+  void update();
 
   // 绑定事件分发器,事件描述符,监听事件和触发事件
   EventLoop *loop_;
   const int fd_;
   int       events_;
   int       revents_;
-  bool      handling;//分发事件中,保证不会被析构
+  bool      handling_;//分发事件中,保证不会被析构
   int       index_;  //在Poller中pollfds_储存位置的下标 或 Epoller中在epollfd_的状态(新加入?已存在需修改?准备删除?)
+  bool      addedToLoop_;
 
   //事件
   static const int k_None;

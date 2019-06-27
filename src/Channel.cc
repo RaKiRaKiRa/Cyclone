@@ -11,6 +11,7 @@
 #include <poll.h>
 #include <sys/epoll.h>
 #include "base/AsyncLogging.h"
+#include "EventLoop.h"
 
 const int Channel::k_None  = 0;
 const int Channel::k_Read  = POLLIN | POLLPRI;
@@ -21,19 +22,21 @@ Channel::Channel(EventLoop* loop, int fd):
   fd_(fd),
   events_(0),
   revents_(0),
-  handling(false)
+  handling_(false),
+  index_(-1),
+  addedToLoop_(false)
 {
 }
 
 Channel::~Channel()
 {
-  assert(!handling);
+  assert(!handling_);
 }
 
 //分发事件
 void Channel::handleEvent()
 {
-  handling = true;
+  handling_ = true;
   //描述符不合法事件
   if(revents_ & POLLNVAL)
   {
@@ -60,5 +63,11 @@ void Channel::handleEvent()
     if(writeCallback_)
       writeCallback_();
   }
-  handling = false;
+  handling_ = false;
+}
+
+void Channel::update()
+{
+  addedToLoop_ = false;
+  loop_ -> updateChannel(this);
 }

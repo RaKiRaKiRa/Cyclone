@@ -149,7 +149,7 @@ void Epoller::update(int op, Channel* channel)
 }
 
 
-void removeChannel(Channel* channel)
+void Epoller::removeChannel(Channel* channel)
 {
 
 }

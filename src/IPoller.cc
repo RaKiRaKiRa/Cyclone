@@ -14,7 +14,7 @@
 //根据设置获得Epoll或Poller
 IPoller* IPoller::newPoller(EventLoop* loop)
 {
-  if(EventLoop::DefaultPoller == EventLoop::k_epoll)
+  if(loop -> PollerType == k_epoll)
     return new Epoller(loop);
   else
     return new Poller(loop);

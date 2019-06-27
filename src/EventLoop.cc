@@ -8,15 +8,20 @@
  **********************************************************/
 
 #include "EventLoop.h"
+#include "IPoller.h"
+#include "Channel.h"
 // 当前线程中的EventLoop, 保证one loop per thread
 __thread EventLoop *t_loopInThisThread = 0;
-//EventLoop中的poll等待毫秒数
-const int kPollTImeMs = 10000;
 
 
-EventLoop::EventLoop():
+EventLoop::EventLoop(int timeout, poller type):
+  PollerType(type),
+  kPollTimeOut(timeout),
   loop_(false),
-  threadId_(CurrentThread::tid())
+  quit_(true),
+  handling_(false),
+  threadId_(CurrentThread::tid()),
+  poller_(IPoller::newPoller(this))
 {
   LOG <<"EventLoop created " << this <<" in thread " << threadId_;  
 
@@ -49,8 +54,57 @@ void EventLoop::assertInLoopThread()
   }
 }
 
+void EventLoop::abortNotInLoopThread()
+{
+  //
+}
+
 void EventLoop::loop()
 {
+  //loop()只应该启动一次并在EventLoop所在线程进行
   assert(!loop_);
-  
+  assertInLoopThread();
+  loop_ = true;
+  quit_ = false;
+  //以quit_为循环条件保证可以及时退出
+  while(!quit_)
+  {
+    activeChannels_.clear();
+    poller_ -> poll(kPollTimeOut, &activeChannels_); 
+    handling_ = true;
+    for(ChannelList::iterator it = activeChannels_.begin(); it != activeChannels_.end(); ++it)
+    {
+      (*it) -> handleEvent();//it指向Channel*,   *it获得Channel*
+    }
+    handling_ = false;
+
+  }
+
+  LOG_TRACE <<"EventLoop " << this <<" stop looping";
+  loop_ = false;
+}
+
+void EventLoop::quit()
+{
+  quit_ = true;
+}
+
+
+void EventLoop::updateChannel(Channel* channel)
+{
+  assert(channel -> loop() == this);
+  assertInLoopThread();
+  poller_ -> updateChannel(channel);
+}
+
+void EventLoop::removeChannel(Channel* channel)
+{
+  assert(channel -> loop() == this);
+  assertInLoopThread();
+  poller_ -> removeChannel(channel);
+}
+
+bool EventLoop::hasChannel(Channel* channel) const
+{
+  return poller_ -> hasChannel(channel);
 }
