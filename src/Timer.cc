@@ -2,14 +2,13 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-28 21:20
- * Last modified : 2019-06-28 22:14
+ * Last modified : 2019-06-30 21:29
  * Filename      : Timer.cc
  * Description   : 
  **********************************************************/
 
 #include "Timer.h"
 #include <stdio.h>
-const int64_t kMsPerS = 1000*1000;
 
 int64_t now()
 {
@@ -60,5 +59,18 @@ std::string timeToFormattedString(int64_t tv, bool showMs)
         tv_.tm_year + 1900, tv_.tm_mon + 1, tv_.tm_mday, 
         tv_.tm_hour, tv_.tm_min, tv_.tm_sec);
     return buf;
+  }
+}
+
+
+void Timer::restart(int64_t now)
+{
+  if(static_cast<bool>(repeat_))
+  {
+    expiration_ = nextEpiration(now);
+  }
+  else
+  {
+    expiration_ = 0;
   }
 }
