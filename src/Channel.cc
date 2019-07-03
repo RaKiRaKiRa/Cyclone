@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-18 14:24
- * Last modified : 2019-06-18 15:13
+ * Last modified : 2019-06-30 17:29
  * Filename      : Channel.cc
  * Description   : 
  **********************************************************/
@@ -68,6 +68,14 @@ void Channel::handleEvent()
 
 void Channel::update()
 {
-  addedToLoop_ = false;
+  addedToLoop_ = true;
   loop_ -> updateChannel(this);
+}
+
+//将自身从EventLoop和对应IPoller内删除
+void Channel::remove()
+{
+  assert(isNoneEvent());
+  addedToLoop_ = false;
+  loop_ -> removeChannel(this);
 }

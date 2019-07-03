@@ -111,6 +111,9 @@ public:
   {
     return events_ == k_None;
   }
+  
+  //将自身从EventLoop和对应IPoller内删除
+  void remove();
 
 private:
   // 使loop_对Channel的变化进行修改
