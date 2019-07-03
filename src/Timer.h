@@ -13,12 +13,8 @@
 #include <string>
 #include <sys/time.h>
 #include "Callback.h"
+#include "time.h"
 
-const int64_t kMsPerS = 1000*1000;
-
-int64_t now();
-std::string timeToString(int64_t t);
-std::string timeToFormattedString(int64_t t, bool showMs = true);
 
 class Timer:noncopyable
 {
@@ -51,7 +47,7 @@ public:
   {
     return sequence_;
   }
-  bool repeat() const
+  TimerType repeat() const
   {
     return repeat_;
   }
@@ -86,6 +82,21 @@ private:
   static atomic<int64_t> timerCreated_;
 };
 
+class TimerId
+{
+public:
+  TimerId(Timer* timer, int64_t sequence):
+    timer_(timer),
+    sequence_(sequence)
+  {
+
+  }
+  friend class TimeQueue;
+
+private:
+    Timer* timer_;
+    int64_t sequence_;
+};
 
 #endif
 
