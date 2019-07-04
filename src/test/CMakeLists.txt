@@ -1,3 +1,6 @@
 add_definitions(-std=c++11)
 add_executable(loop_test loop_test.cc)
 target_link_libraries(loop_test Cyclone_net)
+
+add_executable(TimeQueue_test TimeQueue_test.cc)
+target_link_libraries(TimeQueue_test Cyclone_net Cyclone_base)
