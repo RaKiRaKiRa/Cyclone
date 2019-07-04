@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-05-29 21:28
- * Last modified : 2019-05-31 16:45
+ * Last modified : 2019-07-04 22:57
  * Filename      : Thread.cc
  * Description   : 
  **********************************************************/
@@ -16,6 +16,7 @@ pid_t gettid()
   return static_cast<pid_t>(::syscall(SYS_gettid));
 }
 
+//在每一个线程中记录的一些线程信息
 namespace CurrentThread
 {  
   static_assert(std::is_same<int, pid_t>::value, "pid_t should be int");
@@ -40,6 +41,8 @@ namespace CurrentThread
   }
 }// CurrentThread
 
+
+// 对线程内实际运行函数的封装， 在执行真正函数前对线程信息进行初始化
 struct ThreadData
 {
   typedef Thread::ThreadFunc ThreadFunc;
@@ -67,7 +70,8 @@ struct ThreadData
     func_();//真正的线程执行函数
     CurrentThread::t_threadName = "finished";
   }
-};
+}; //ThreadData
+
 
 //Thread::start() => startThread() => ThreadData::runInThread() => ThreadFunc
 //所以startThread可以看成是一个跳板或中介,若用成员函数需要用static void*
