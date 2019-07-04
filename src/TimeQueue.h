@@ -9,7 +9,7 @@
 
 #ifndef TIMEQUEUE_H
 #define TIMEQUEUE_H
-#include "Timer.h"
+//#include "Timer.h"
 #include "Channel.h"
 #include "base/AsyncLogging.h"
 
@@ -18,8 +18,20 @@
 #include <vector>
 #include <sys/timerfd.h>
 
+
+namespace timer
+{
+  
+  int64_t now();
+  std::string timeToString(int64_t tv);
+  std::string timeToFormattedString(int64_t tv, bool showMs);
+
+}
+
+class Timer;
+class TimerId;
 class EventLoop;
-//定时器，实际是用一个Channel对timefd的封装
+//定时器，实际是用一个Channel对timefd的封装,添加与删除定时事件是通过queueInLoop进行，而定时事件触发是timeFd在poll触发后由loop执行handleRead
 //Timer作为事件存于一个二叉搜索树std::set中，操作复杂度O(logN),key为pair<int64_t, Time*>,使得Timer按时间排序
 class TimeQueue:noncopyable
 {

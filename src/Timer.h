@@ -13,8 +13,8 @@
 #include <string>
 #include <sys/time.h>
 #include "Callback.h"
-#include "time.h"
 
+extern const int64_t kMsPerS;
 
 class Timer:noncopyable
 {
@@ -69,6 +69,7 @@ public:
 
 private:
   //类声明中定义的自动为inline
+//  int64_t nextEpiration(int64_t now) const;
   int64_t nextEpiration(int64_t now) const
   {
     return now + static_cast<int64_t>(interval_ * kMsPerS);

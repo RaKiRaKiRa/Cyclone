@@ -10,7 +10,8 @@
 #include "Timer.h"
 #include <stdio.h>
 
-
+const int64_t kMsPerS = 1000*1000;
+atomic<int64_t> Timer::timerCreated_;
 
 void Timer::restart(int64_t now)
 {
