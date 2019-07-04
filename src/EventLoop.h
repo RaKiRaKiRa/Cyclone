@@ -55,11 +55,11 @@ public:
   TimerId runAt(const int64_t& time, TimerCallback cb);
   TimerId runAfter(double delay, TimerCallback cb);
   TimerId runEvery(double interval, TimerCallback cb);
-  void runInLoop(Functor cb);
-  void queueInLoop(Functor cb);
+  void runInLoop(Functor cb);                           //若在loop线程中直接执行cb，否则调用queueInLoop
+  void queueInLoop(Functor cb);                         //将cb加入pendingFunctors_使其在loop中执行，加入后对poll进行唤醒
   void cancel(TimerId timerId);
-  void wakeup();//像wakeupFd_发送一个字节，使poll从阻塞中唤醒
-  void handleRead();//绑定给wakeupChannel_做可读监听，从wakeupFd_接收一个字节，使poll从阻塞状态唤醒
+  void wakeup();                                        //像wakeupFd_发送一个字节，使poll从阻塞中唤醒
+  void handleRead();                                    //绑定给wakeupChannel_做可读监听，从wakeupFd_接收一个字节，使poll从阻塞状态唤醒
   void doPendingFunctors(); 
 
 
@@ -71,9 +71,9 @@ public:
 
   void assertInLoopThread();
   static EventLoop* getEventLoopOfCurrentThread();
+  const poller PollerType;
 
 private:
-  const poller PollerType;
   const int kPollTimeOut;//EventLoop中的poll等待毫秒数
   void abortNotInLoopThread();
 
@@ -91,6 +91,7 @@ private:
   std::unique_ptr<Channel> wakeupChannel_;
   bool calling_;
 
+  MutexLock mutex_;
 };
 
 #endif 
