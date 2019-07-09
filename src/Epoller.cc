@@ -24,7 +24,7 @@ Epoller::Epoller(EventLoop* loop):
 
 void Epoller::poll(int timeout, ChannelList* activeChannels)
 {
-  LOG_TRACE <<"fd totai count" << channelsByFd_.size();
+  LOG_TRACE <<"fd total count = " << channelsByFd_.size();
 
   int activeNum = ::epoll_wait(epollfd_, events_.data(), static_cast<int>(events_.size()), timeout);
   int savedErr = errno;
