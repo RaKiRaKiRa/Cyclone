@@ -10,6 +10,7 @@
 #include "../EventLoop.h"
 
 EventLoop* g_loop;
+TimerId tid(0,0);
 
 void print()
 {
@@ -20,10 +21,17 @@ void print2()
 {
   printf("Every\n");
 }
+
+void dt()
+{
+  g_loop -> cancel(tid);
+}
+
 void threadFunc()
 {
   g_loop -> runAfter(1.0, print);
-  g_loop -> runEvery(3.0, print2);
+  tid = g_loop -> runEvery(3.0, print2);
+  g_loop -> runAfter(25.0, dt);
 }
 
 int main()
