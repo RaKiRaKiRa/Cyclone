@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-10 21:18
+ * Last modified : 2019-07-10 23:26
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -23,7 +23,7 @@ int createNonblockingSockfd()
 
   if(sockfd < 0)
   {
-    LOG_ERROR << "ERROR :SocketOpts -- createNonblockingSockfd \n";
+    LOG_ERROR << "ERROR :SocketOpts -- createNonblockingSockfd ";
    // std::cerr<< "ERROR :SocketOpts -- createNonblockingSockfd \n";
   }
   //创建完成后设置非阻塞
@@ -41,7 +41,7 @@ void Bind(int sockfd ,struct sockaddr* addr)
   int ret = bind(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in)));
   if(ret < 0)
   {
-    LOG_ERROR << "ERROR : SocketOpts -- Connect \n";
+    LOG_ERROR << "ERROR : SocketOpts -- Connect ";
     //std::cerr << "ERROR : SocketOpts -- Connect \n";
   }
 }
@@ -51,7 +51,7 @@ void Listen(int sockfd)
   int ret = listen(sockfd, SOMAXCONN);// SOMAXCONN是每一个端口最大的监听队列的长度,默认值为1024
   if(ret < 0)
   {
-    LOG_ERROR << "ERROR : SocketOpts -- Listen \n";
+    LOG_ERROR << "ERROR : SocketOpts -- Listen ";
   }
 
 }
@@ -99,7 +99,15 @@ void ShutdownWrite(int sockfd)
 {
   if(shutdown(sockfd, SHUT_WR) < 0)
   {
-    LOG_ERROR << "ERROR : SocketOpts -- ShutdownWrite \n";
+    LOG_ERROR << "ERROR : SocketOpts -- ShutdownWrite ";
+  }
+}
+
+void Close(int sockfd)
+{
+  if(close(sockfd) < 0)
+  {
+    LOG_ERROR << "ERROR : SocketOpts -- Close ";
   }
 }
 //×××××××××××××××对socket选项进行封装××××××××××××××××××××
@@ -111,7 +119,7 @@ void setNonblock(int sockfd, bool on)
   //检查错误
   if(flag < 0)
   {
-    LOG_ERROR << "ERROR : SocketOpts -- setNonblock \n";
+    LOG_ERROR << "ERROR : SocketOpts -- setNonblock ";
     //std::cerr << "ERROR : SocketOpts -- setNonblock \n";
 
   }
@@ -121,7 +129,7 @@ void setNonblock(int sockfd, bool on)
   if(fcntl(sockfd, F_SETFL, flag) < 0)
   {
     //std::cerr << "ERROR : SocketOpts -- setNonblock \n";
-    LOG_ERROR << "ERROR : SocketOpts -- setNonblock \n";
+    LOG_ERROR << "ERROR : SocketOpts -- setNonblock ";
   }
 }
 
@@ -131,7 +139,7 @@ void setReusePort(int sockfd, bool on)
   int ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &opt, static_cast<socklen_t>(sizeof opt));
   if(on && ret < 0)
   {
-    LOG_ERROR << "ReusePort failed. \n";
+    LOG_ERROR << "ReusePort failed. ";
   }
 }
 
@@ -173,6 +181,6 @@ void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr)
   addr -> sin_port   = hostToNetwork16(port);
   if(inet_pton(AF_INET , ip, &addr->sin_addr))
   {
-    LOG_ERROR << "SocketOpts -- fromIpPort \n";
+    LOG_ERROR << "SocketOpts -- fromIpPort ";
   }
 }
