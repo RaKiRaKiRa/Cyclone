@@ -43,9 +43,9 @@ public:
   void loop();
   void quit();
 
-  //Channel IPoller TimeQueue不直接相互调用,而是通过EventLoop中的控制函数进行间接交互
+  //IPoller TimeQueue不直接相互调用,而是通过EventLoop中的控制函数进行间接交互
   //
-  //对Channel操作
+  //对IPoller操作
   void updateChannel(Channel* channel);
   void removeChannel(Channel* channel);
   bool hasChannel(Channel* channel) const;
