@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-09 22:26
- * Last modified : 2019-07-10 21:37
+ * Last modified : 2019-07-12 16:48
  * Filename      : Socket.h
  * Description   : 
  **********************************************************/
@@ -36,11 +36,11 @@ public:
   }
 
 /******************通信api************************/
-  void bind(const struct sockaddr* addr);
+  void bind(const struct sockaddr_in* addr);
 
   void listen();
 
-  int accept(sockaddr* addr);
+  int accept(sockaddr_in* addr);
 
   //仅关闭写，可以接收完数据
   void shutdownWrite();

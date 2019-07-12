@@ -10,7 +10,7 @@
 #include "Socket.h"
 #include <memory.h>
 
-void Socket::bind(const struct sockaddr* addr)
+void Socket::bind(const struct sockaddr_in* addr)
 {
   Bind(sockfd_, addr);
 }
@@ -20,7 +20,7 @@ void Socket::listen()
   Listen(sockfd_);
 }
 
-int Socket::accept(sockaddr* addr)
+int Socket::accept(sockaddr_in* addr)
 {
   memset(addr, 0, sizeof(*addr));
   int connfd = Accept(sockfd_, addr);

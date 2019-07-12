@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-10 23:26
+ * Last modified : 2019-07-12 16:53
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -31,14 +31,14 @@ int createNonblockingSockfd()
   return sockfd;
 }
 
-int Connect(int sockfd, const struct sockaddr* addr)
+int Connect(int sockfd, const struct sockaddr_in* addr)
 {
-  return connect(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in)));
+  return connect(sockfd, sockaddr_cast(addr), static_cast<socklen_t>(sizeof(struct sockaddr_in)));
 }
 
-void Bind(int sockfd ,struct sockaddr* addr)
+void Bind(int sockfd ,struct sockaddr_in* addr)
 {
-  int ret = bind(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in)));
+  int ret = bind(sockfd, sockaddr_cast(addr), static_cast<socklen_t>(sizeof(struct sockaddr_in)));
   if(ret < 0)
   {
     LOG_ERROR << "ERROR : SocketOpts -- Connect ";
@@ -56,10 +56,10 @@ void Listen(int sockfd)
 
 }
 
-int Accept(int sockfd, sockaddr* addr)
+int Accept(int sockfd, sockaddr_in* addr)
 {
   socklen_t len = static_cast<socklen_t>(sizeof(*addr));
-  int connfd = accept(sockfd, addr, &len);
+  int connfd = accept(sockfd, sockaddr_cast(addr), &len);
   //检验accept错误
   if(connfd < 0)
   {

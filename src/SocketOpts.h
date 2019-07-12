@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-09 23:54
- * Last modified : 2019-07-10 21:18
+ * Last modified : 2019-07-12 16:53
  * Filename      : SocketOpts.h
  * Description   : 
  **********************************************************/
@@ -87,13 +87,13 @@ SA* sockaddr_cast(sockaddr_in *addr)
 //创建一个非阻塞socketFd
 int createNonblockingSockfd();
 
-int Connect(int sockfd, const struct sockaddr* addr);
+int Connect(int sockfd, const struct sockaddr_in* addr);
 
-void Bind(int sockfd, const struct sockaddr* addr);
+void Bind(int sockfd, const struct sockaddr_in* addr);
 
 void Listen(int sockfd);
 
-int Accept(int sockfd, sockaddr* addr);
+int Accept(int sockfd, sockaddr_in* addr);
 
 //仅关闭WR,用于优雅关闭,不用close保证接收数据的完整性
 //TCP 是全双工，shutdownWrite() 关闭了“写”方向的连接，保留了“读”方向，这称为half-close。
