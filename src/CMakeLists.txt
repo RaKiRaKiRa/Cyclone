@@ -6,7 +6,10 @@ set(SRCS
     Epoller.cc
     Timer.cc
     TimeQueue.cc 
-    #EventLoopThread.cc
+    EventLoopThread.cc
+    Socket.cc
+    SocketOpts.cc
+    Acceptor.cc
     #EventLoopThreadPool.cc
     #HttpData.cc
     #Main.cc
