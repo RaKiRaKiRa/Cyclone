@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-12 16:53
+ * Last modified : 2019-07-13 17:34
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -14,6 +14,7 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <stdio.h>
+#include <string.h>
   
 //×××××××××××××××对socket进行封装，增加报错×××××××××××××
 
@@ -36,7 +37,7 @@ int Connect(int sockfd, const struct sockaddr_in* addr)
   return connect(sockfd, sockaddr_cast(addr), static_cast<socklen_t>(sizeof(struct sockaddr_in)));
 }
 
-void Bind(int sockfd ,struct sockaddr_in* addr)
+void Bind(int sockfd ,const struct sockaddr_in* addr)
 {
   int ret = bind(sockfd, sockaddr_cast(addr), static_cast<socklen_t>(sizeof(struct sockaddr_in)));
   if(ret < 0)
@@ -90,8 +91,8 @@ int Accept(int sockfd, sockaddr_in* addr)
         break;
     }
   }
-
-  setNonblock(connfd, true);
+  else
+    setNonblock(connfd, true);
   return connfd;
 }
 
@@ -120,16 +121,23 @@ void setNonblock(int sockfd, bool on)
   if(flag < 0)
   {
     LOG_ERROR << "ERROR : SocketOpts -- setNonblock ";
+    //printf("%s\n", strerror(errno));
     //std::cerr << "ERROR : SocketOpts -- setNonblock \n";
 
   }
-
-  flag |= O_NONBLOCK;
+  if(on)
+    flag |= O_NONBLOCK;
+  else if(flag & O_NONBLOCK)
+    flag &= ~O_NONBLOCK;
+  else
+    return;
+    
   //修改并检错
   if(fcntl(sockfd, F_SETFL, flag) < 0)
   {
     //std::cerr << "ERROR : SocketOpts -- setNonblock \n";
     LOG_ERROR << "ERROR : SocketOpts -- setNonblock ";
+    printf("%s\n", strerror(errno));
   }
 }
 
@@ -175,11 +183,20 @@ void toIpPort(char* buf, size_t size, const struct sockaddr_in *addr)
   
 }
 
-void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr)
+void fromPort(uint16_t port, struct sockaddr_in *addr)
 {
+  memset(addr, 0, sizeof(*addr));
   addr -> sin_family = AF_INET;
   addr -> sin_port   = hostToNetwork16(port);
-  if(inet_pton(AF_INET , ip, &addr->sin_addr))
+  addr -> sin_addr.s_addr = hostToNetwork32(INADDR_ANY);
+}
+
+void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr)
+{
+  memset(addr, 0, sizeof(*addr));
+  addr -> sin_family = AF_INET;
+  addr -> sin_port   = hostToNetwork16(port);
+  if(inet_pton(AF_INET , ip, &addr->sin_addr) < 0)
   {
     LOG_ERROR << "SocketOpts -- fromIpPort ";
   }

@@ -70,12 +70,12 @@ inline uint64_t networkToHost64(uint64_t network)
 
 typedef sockaddr SA;
 
-const SA* sockaddr_cast(const sockaddr_in *addr)
+inline const SA* sockaddr_cast(const sockaddr_in *addr)
 {
   return static_cast<const SA*>(static_cast<const void*>(addr));
 }
 
-SA* sockaddr_cast(sockaddr_in *addr)
+inline SA* sockaddr_cast(sockaddr_in *addr)
 {
   return static_cast<SA*>(static_cast<void*>(addr));
 }
@@ -127,6 +127,7 @@ void toIpPort(char* buf, size_t size, const struct sockaddr_in *addr);
 
 //将ip port 传给addr
 void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr);
+void fromPort(uint16_t port, struct sockaddr_in *addr);
 
 int getSocketError(int sockfd);
 
