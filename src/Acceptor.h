@@ -18,7 +18,7 @@ class Acceptor : noncopyable
 {
 public:
   typedef std::function<void(int sockfd, sockaddr_in& addr)> NewConnCallback;
-  Acceptor(EventLoop *loop, const sockaddr_in& addr, bool reuseport);
+  Acceptor(EventLoop *loop, const sockaddr_in& addr, bool reuseport = true);
 
   //析构将channel_从EventLoop和IPoller中移除
   //Socket本身是RAII的，生命周期与Acceptor相同不用管

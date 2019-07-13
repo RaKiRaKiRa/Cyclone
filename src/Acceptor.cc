@@ -8,7 +8,6 @@
  **********************************************************/
 
 #include "Acceptor.h"
-#include "Socket.h"
 
 Acceptor::Acceptor(EventLoop *loop, const sockaddr_in& addr, bool reuseport):
   loop_(loop),
@@ -62,12 +61,12 @@ void Acceptor::handleRead()
       }
     }
     //no more
-    else if(connfd == -1 && errno == EAGAIN)
+    else if(errno == EAGAIN || errno == EWOULDBLOCK)
     {
-      LOG_TRACE << "accepted all conn in Acceptor::handleRead";
+      LOG_TRACE << "has accepted all conn in Acceptor::handleRead";
       break;
     }
-    //connfd <= 0表示连接失败，出现错误 
+    //表示连接失败，出现错误 
     else
     {
       LOG_ERROR << "in Acceptor::handleRead";
