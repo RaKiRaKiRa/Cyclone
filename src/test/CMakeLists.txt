@@ -4,3 +4,6 @@ target_link_libraries(loop_test Cyclone_net)
 
 add_executable(TimeQueue_test TimeQueue_test.cc)
 target_link_libraries(TimeQueue_test Cyclone_net Cyclone_base)
+
+add_executable(Acceptor_test Acceptor_test.cc)
+target_link_libraries(Acceptor_test Cyclone_net Cyclone_base)
