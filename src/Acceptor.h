@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-12 16:13
- * Last modified : 2019-07-12 17:13
+ * Last modified : 2019-07-16 19:49
  * Filename      : Acceptor.h
  * Description   : 
  **********************************************************/
@@ -42,7 +42,7 @@ private:
   EventLoop *loop_;
   Socket socket_;
   Channel channel_;
-  NewConnCallback newConnCallback_;//建立连接后的回调，用与建立TcpConnection
+  NewConnCallback newConnCallback_;//建立连接后的回调，用与建立TcpConnection,客户端套接字和地址作为参数传入，一般用于初始化一个Connection
   bool listening_;
 };
 

@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-12 17:21
- * Last modified : 2019-07-12 23:10
+ * Last modified : 2019-07-16 19:49
  * Filename      : Acceptor.cc
  * Description   : 
  **********************************************************/
@@ -17,8 +17,11 @@ Acceptor::Acceptor(EventLoop *loop, const sockaddr_in& addr, bool reuseport):
 {
   //多路复用+回调绑定
   socket_.setReuseAddr(true);
+  //开启端口复用后，对于端口bind，如果这个地址/端口处于TIME_WAIT，也可bind成功
   socket_.setReusePort(reuseport);
   socket_.bind(&addr);
+  //设置读事件触发后的回调函数，用于调用newConnCallback_,建立一个新Connection
+  //此时还没有开始监听Channel，需要在listen中开启enableRead
   channel_.setReadCallback(std::bind(&Acceptor::handleRead, this));
 }
 
@@ -35,6 +38,7 @@ void Acceptor::listen()
   loop_ -> assertInLoopThread();
   listening_ = true;
   socket_.listen();
+  //开始监听（加入poll）
   channel_.enableRead();
 }
 
