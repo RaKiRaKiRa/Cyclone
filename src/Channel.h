@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-15 21:54
- * Last modified : 2019-06-23 16:59
+ * Last modified : 2019-07-17 00:03
  * Filename      : Channel.h
  * Description   : 
  **********************************************************/
@@ -137,5 +137,6 @@ private:
   Callback readCallback_;
   Callback writeCallback_;
   Callback errorCallback_;
+  Callback closeCallback_;
 };
 #endif

@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-18 14:24
- * Last modified : 2019-06-30 17:29
+ * Last modified : 2019-07-17 00:03
  * Filename      : Channel.cc
  * Description   : 
  **********************************************************/
@@ -37,20 +37,29 @@ Channel::~Channel()
 void Channel::handleEvent()
 {
   handling_ = true;
-  //描述符不合法事件
+  //描述符未开事件
   if(revents_ & POLLNVAL)
   {
     LOG_WARN <<"Channel::handleEvent() POLLNVAL, fd = " << fd_;
   }
 
-  //错误事件
+  //对方挂断连接且没有可读数据，则关闭
+  if((revents_ & POLLHUP) && !(revents_ & POLLIN))
+  {
+    if(closeCallback_)
+      closeCallback_();
+  }
+
+  //错误事件或文件描述符未开
   if(revents_ & (POLLERR | POLLNVAL))
   {
     if(errorCallback_)
       errorCallback_();
   }
 
-  //读事件,POLLRDHUP即远端挂断连接
+  //读事件,
+  //若触发且没有读到数据则表明对方关闭写并将数据全部读完，进行closeCallback_，完成优雅关闭
+  //POLLRDHUP即远端关闭连接或关闭写操作
   if(revents_ & (POLLIN | POLLPRI | POLLRDHUP))
   {
     if(readCallback_)
