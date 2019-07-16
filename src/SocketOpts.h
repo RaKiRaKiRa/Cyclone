@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-09 23:54
- * Last modified : 2019-07-12 16:53
+ * Last modified : 2019-07-16 22:05
  * Filename      : SocketOpts.h
  * Description   : 
  **********************************************************/
@@ -129,8 +129,9 @@ void toIpPort(char* buf, size_t size, const struct sockaddr_in *addr);
 void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr);
 void fromPort(uint16_t port, struct sockaddr_in *addr);
 
-int getSocketError(int sockfd);
+//int getSocketError(int sockfd);
 
 
+struct sockaddr_in getAddr(int sockfd);  
 
 #endif

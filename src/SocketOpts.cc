@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-13 17:34
+ * Last modified : 2019-07-16 22:06
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -201,3 +201,16 @@ void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr)
     LOG_ERROR << "SocketOpts -- fromIpPort ";
   }
 }
+
+struct sockaddr_in getAddr(int sockfd)
+{
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof addr);
+  socklen_t len = static_cast<socklen_t>(sizeof addr);
+  if(getpeername(sockfd, sockaddr_cast(&addr), &len) < 0)
+  {
+    LOG_ERROR << "SocketOpts -- getAddr";
+  }
+  return addr;
+}
+
