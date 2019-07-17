@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-16 21:45
- * Last modified : 2019-07-17 00:03
+ * Last modified : 2019-07-18 00:58
  * Filename      : Connection.h
  * Description   : 
  **********************************************************/
@@ -29,31 +29,50 @@ class Connection : noncopyable, public std::enable_shared_from_this<Connection>
 {
 public:
   typedef std::function<void(const ConnectionPtr&)> ConnCallback;
-  Connection(EventLoop *loop, std::string name, sockaddr_in local, sockaddr_in peer, int sockfd);
+  typedef std::function<void()> CloseCallback;
+  Connection(EventLoop *loop, std::string name, sockaddr_in local, sockaddr_in peer, int sockfd);//虽然有local地址和peer地址，但通信靠sockfd绑定
   ~Connection();
 
+  //设置回调函数接口
+  void setConnCallback(ConnCallback cb)
+  {
+    connCallback_ = std::move(cb);
+  }
+  void setMessCallback(MessCallback cb)
+  {
+    messCallback_ = std::move(cb);
+  }
+  void setCloseCallback(CloseCallback cb)
+  {
+    closeCallback_ = std::move(cb);
+  }
+
+
+  void connEstablished();   //开启Channel的可读监听并调用connCallback
 private:
-  enum StateE {kConnecting, kConnected};//连接状态
+  enum StateE {kConnecting, kConnected, kDisconnected};//连接状态
   void setState(StateE s)
   {
     state_ = s;
   }
 
   //监听端口事件触发后调用，在构造函数中绑定给channel_
-  void handleRead();   //端口可读
+  void handleRead();   //端口可读,并根据read返回值调用messageCallback_, handleClose, handleError
   void handleWrite();  //端口可写
-  void handleClose();  //端口关闭
-  void handleError();  //端口出错
+  void handleClose();  //端口关闭, 调用closeCallback_=>Server::removeConnection,这里很重要详细看笔记+实现注释
+  void handleError();  //端口出错, 仅日志输出
 
   EventLoop* loop_;
   std::string name_;
   StateE state_;
-  sockaddr_in peer_;
-  sockaddr_in local_;
+  sockaddr_in peer_;                  //对端地址
+  sockaddr_in local_;                 //本地地址
   std::unique_ptr<Socket> socket_;    //用于连接控制的TCP套接字
   std::unique_ptr<Channel> channel_;  //及其对应Channel
 
-  ConnCallback ConnCallback_;         //连接建立事件回调函数
+  ConnCallback connCallback_;         //连接建立事件回调函数
+  MessCallback messCallback_;
+  CloseCallback closeCallback_;
 };
 
 #endif
