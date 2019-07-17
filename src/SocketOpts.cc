@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-16 22:06
+ * Last modified : 2019-07-18 01:01
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -178,9 +178,18 @@ void toIpPort(char* buf, size_t size, const struct sockaddr_in *addr)
   char host[16];//3*4 + 3 + 1
   inet_ntop(AF_INET, &addr->sin_addr, host, sizeof host);
   uint16_t port = networkToHost16(addr -> sin_port);
-
   snprintf(buf, size, "%s:%u", host, port);
-  
+}
+
+std::string toIpPort(const struct sockaddr_in *addr)
+{
+  char buf[64];
+  char host[16];//3*4 + 3 + 1
+  inet_ntop(AF_INET, &addr->sin_addr, host, sizeof host);
+  uint16_t port = networkToHost16(addr -> sin_port);
+  snprintf(buf, 64, "%s:%u", host, port);
+  std::string res(buf);
+  return res;
 }
 
 void fromPort(uint16_t port, struct sockaddr_in *addr)

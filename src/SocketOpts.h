@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-09 23:54
- * Last modified : 2019-07-16 22:05
+ * Last modified : 2019-07-17 21:51
  * Filename      : SocketOpts.h
  * Description   : 
  **********************************************************/
@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <endian.h>
+#include <string>
 
 //网路字节序与主机字节序相互转换，be指big-endian，网络序是大端的
 
@@ -124,6 +125,7 @@ void setKeepAlive(int sockfd, bool on);
 
 //将addr中的ip:port 输出给buf
 void toIpPort(char* buf, size_t size, const struct sockaddr_in *addr);
+std::string toIpPort(const struct sockaddr_in *addr);
 
 //将ip port 传给addr
 void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr);
