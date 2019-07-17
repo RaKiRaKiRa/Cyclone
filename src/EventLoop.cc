@@ -92,6 +92,7 @@ void EventLoop::loop()
     poller_ -> poll(kPollTimeOut, &activeChannels_); 
 
     handling_ = true;
+    //执行每个触发的事件
     for(Channel* it : activeChannels_)
     {
       it -> handleEvent();//it指向Channel*,   *it获得Channel*
