@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-19 17:12
- * Last modified : 2019-06-23 15:41
+ * Last modified : 2019-07-18 01:01
  * Filename      : Epoller.cc
  * Description   : 
  **********************************************************/
@@ -77,9 +77,9 @@ for(int i = 0; i < activeNum; ++i)
 }
 
 //Epoller中的状态储存在对应Channel的index_中
-const int kNew     = -1; //当前Channel是新的，并且需要添加进epoll文件描述符中
-const int kAdded   =  1; //当前Channel存在且非None,已加入epollfd
-const int kDeleted =  2; //当前Channel之前存在且处于NoneEvent，现在需要添加进epoll文件描述符中
+const int kNew     = -1; //当前Channel未添加进epoll文件描述符和channelsByFd_中
+const int kAdded   =  1; //当前Channel存在且非None,已加入epollfd监听
+const int kDeleted =  2; //当前Channel之前存在且处于NoneEvent，已经存于channelsByFd,未添加进epoll文件描述符中
 
 //维护和更新eventfd_   和channel_
 void Epoller::updateChannel(Channel* channel)
@@ -151,5 +151,18 @@ void Epoller::update(int op, Channel* channel)
 
 void Epoller::removeChannel(Channel* channel)
 {
+  int fd = channel -> fd();
 
+  LOG_TRACE << "fd = " << fd;
+  assert(channelsByFd_.find(fd) != channelsByFd_.end() && channelsByFd_[fd] == channel);
+
+  int state = channel -> index();
+  assert(state == kAdded || state == kDeleted);//至少应存在与channelsByFd_
+  channelsByFd_.erase(fd);
+
+  if(state == kAdded)//若已加入epoll监听则删除
+  {
+    update(EPOLL_CTL_DEL, channel);
+  }
+  channel -> setIndex(kNew);
 }

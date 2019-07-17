@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-19 16:13
- * Last modified : 2019-06-30 17:29
+ * Last modified : 2019-07-18 01:00
  * Filename      : Poller.cc
  * Description   : 
  **********************************************************/
@@ -110,5 +110,28 @@ void Poller::updateChannel(Channel* channel)
 
 void Poller::removeChannel(Channel* channel)
 {
+  LOG_TRACE <<"fd = " << channel -> fd();
+  assert(channelsByFd_.find(channel->fd()) != channelsByFd_.end() && channelsByFd_[channel->fd()] == channel);
 
+  int idx = channel -> index();//获得其在pollfds_中的下标
+
+  //从channelsByFd_删除
+  channelsByFd_.erase(channel -> fd());
+
+  //从pollfds_中删除，移至最后在pop
+  if(static_cast<size_t>(idx) == pollfds_.size() - 1)
+  {
+    pollfds_.pop_back();
+  }
+  else
+  {
+    int endFd = pollfds_.back().fd;
+    iter_swap(pollfds_.begin() + idx, pollfds_.end() - 1);
+    if(endFd < 0)//无关注事件，获取其真实fd
+    {
+      endFd = -endFd - 1;
+    }
+    channelsByFd_[endFd] -> setIndex(idx);
+    pollfds_.pop_back();
+  }
 }
