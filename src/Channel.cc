@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-18 14:24
- * Last modified : 2019-07-17 00:03
+ * Last modified : 2019-07-17 00:37
  * Filename      : Channel.cc
  * Description   : 
  **********************************************************/
@@ -43,7 +43,7 @@ void Channel::handleEvent()
     LOG_WARN <<"Channel::handleEvent() POLLNVAL, fd = " << fd_;
   }
 
-  //对方挂断连接且没有可读数据，则关闭
+  //对方挂起？且没有可读数据，则关闭
   if((revents_ & POLLHUP) && !(revents_ & POLLIN))
   {
     if(closeCallback_)
@@ -59,7 +59,7 @@ void Channel::handleEvent()
 
   //读事件,
   //若触发且没有读到数据则表明对方关闭写并将数据全部读完，进行closeCallback_，完成优雅关闭
-  //POLLRDHUP即远端关闭连接或关闭写操作
+  //POLLRDHUP即远端关闭连接或关闭写操作,当对端正常关闭的时候会触发POLLIN | POLLRDHUP
   if(revents_ & (POLLIN | POLLPRI | POLLRDHUP))
   {
     if(readCallback_)
