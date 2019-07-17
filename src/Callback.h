@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-30 17:33
- * Last modified : 2019-07-16 22:36
+ * Last modified : 2019-07-18 01:00
  * Filename      : Callback.h
  * Description   : 
  **********************************************************/
@@ -24,6 +24,8 @@ class Buffer;
 class Connection;
 typedef std::shared_ptr<Connection> ConnectionPtr;
 
-typedef std::function<void (const ConnectionPtr&)> ConnCallback;//连接事件
+typedef std::function<void (const ConnectionPtr&)> ConnCallback;          //连接事件
+typedef std::function<void (const ConnectionPtr&, Buffer*)> MessCallback; //消息到达事件，fd可读
+typedef std::function<void (const ConnectionPtr&)> WriteCompleteCallback; // 数据已从应用层写入缓冲区，并不代表对方已收到
 
 #endif

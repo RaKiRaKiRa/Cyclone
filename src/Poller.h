@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-18 16:07
- * Last modified : 2019-06-19 15:23
+ * Last modified : 2019-07-18 01:01
  * Filename      : Poller.h
  * Description   : 
  **********************************************************/
@@ -23,6 +23,7 @@ public:
   //IO复用,将活跃Channel放入activeChannels
   void poll(int timeout,ChannelList *activeChannels);
 
+  //将对应channel直接从channelByFd删除，在中pollfds_与最后一个交换并删除，
   void removeChannel(Channel* channel);
 
   //维护和更新pollfds__   和channel_

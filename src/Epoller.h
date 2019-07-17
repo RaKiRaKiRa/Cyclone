@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-18 16:07
- * Last modified : 2019-06-30 17:29
+ * Last modified : 2019-07-18 01:01
  * Filename      : Epoller.h
  * Description   : 
  **********************************************************/
@@ -26,6 +26,7 @@ public:
   //IO复用,将活跃Channel放入activeChannels
   void poll(int timeout, ChannelList* activeChannels);
   
+  //将对应channel从channelByFd——删除并通过epoll_ctl从监听中取消
   void removeChannel(Channel* channel);
 
   //维护和更新eventfd_   和channel_
@@ -35,6 +36,7 @@ public:
 private:
   //封装epoll_ctl
   void update(int op, Channel* channel);
+
   void fill_activeChannels(int activeNum, ChannelList* activeChannels) const;
 
   const int eventList_InitialSize = 16;

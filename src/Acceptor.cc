@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-12 17:21
- * Last modified : 2019-07-16 19:49
+ * Last modified : 2019-07-18 01:00
  * Filename      : Acceptor.cc
  * Description   : 
  **********************************************************/
@@ -39,6 +39,8 @@ void Acceptor::listen()
   listening_ = true;
   socket_.listen();
   //开始监听（加入poll）
+  //Acceptor::listen() => Channel::enableRead() => Channel::update() => EventLoop::channelUpdate() => Poller::ChannelUpdate()
+  //即channel要加入poller的话必须通过EventLoop
   channel_.enableRead();
 }
 
