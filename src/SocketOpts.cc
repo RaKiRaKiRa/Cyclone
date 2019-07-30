@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-18 01:01
+ * Last modified : 2019-07-30 01:34
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -192,6 +192,17 @@ std::string toIpPort(const struct sockaddr_in *addr)
   return res;
 }
 
+std::string toIpPort(const struct sockaddr_in &addr)
+{
+  char buf[64];
+  char host[16];//3*4 + 3 + 1
+  inet_ntop(AF_INET, &addr.sin_addr, host, sizeof host);
+  uint16_t port = networkToHost16(addr.sin_port);
+  snprintf(buf, 64, "%s:%u", host, port);
+  std::string res(buf);
+  return res;
+}
+
 void fromPort(uint16_t port, struct sockaddr_in *addr)
 {
   memset(addr, 0, sizeof(*addr));
@@ -211,7 +222,31 @@ void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr)
   }
 }
 
-struct sockaddr_in getAddr(int sockfd)
+struct sockaddr_in fromPort(uint16_t port)
+{
+  sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
+  addr.sin_port   = hostToNetwork16(port);
+  addr.sin_addr.s_addr = hostToNetwork32(INADDR_ANY);
+  return addr;
+}
+
+struct sockaddr_in fromIpPort(const char* ip, uint16_t port)
+{
+  sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
+  addr.sin_port   = hostToNetwork16(port);
+  if(inet_pton(AF_INET , ip, &addr.sin_addr) < 0)
+  {
+    LOG_ERROR << "SocketOpts -- fromIpPort ";
+  }
+  return addr;
+}
+
+
+struct sockaddr_in getPeerAddr(int sockfd)
 {
   struct sockaddr_in addr;
   memset(&addr, 0, sizeof addr);
@@ -223,3 +258,14 @@ struct sockaddr_in getAddr(int sockfd)
   return addr;
 }
 
+struct sockaddr_in getLocalAddr(int sockfd)
+{
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof addr);
+  socklen_t len = static_cast<socklen_t>(sizeof addr);
+  if(getsockname(sockfd, sockaddr_cast(&addr), &len) < 0)
+  {
+    LOG_ERROR << "SocketOpts -- getAddr";
+  }
+  return addr;
+}

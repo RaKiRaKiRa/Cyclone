@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 21:37
- * Last modified : 2019-07-10 23:12
+ * Last modified : 2019-07-30 00:36
  * Filename      : Socket.cc
  * Description   : 
  **********************************************************/
@@ -30,6 +30,11 @@ int Socket::accept(sockaddr_in* addr)
 void Socket::shutdownWrite()
 {
   ShutdownWrite(sockfd_);
+}
+
+void Socket::setNodelay(bool on)
+{
+  ::setNodelay(sockfd_, on);
 }
 
 void Socket::setNonblock(bool on)

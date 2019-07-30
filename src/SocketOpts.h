@@ -126,14 +126,18 @@ void setKeepAlive(int sockfd, bool on);
 //将addr中的ip:port 输出给buf
 void toIpPort(char* buf, size_t size, const struct sockaddr_in *addr);
 std::string toIpPort(const struct sockaddr_in *addr);
+std::string toIpPort(const struct sockaddr_in &addr);
 
 //将ip port 传给addr
 void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in *addr);
 void fromPort(uint16_t port, struct sockaddr_in *addr);
+struct sockaddr_in fromIpPort(const char* ip, uint16_t port);
+struct sockaddr_in fromPort(uint16_t port);
 
 //int getSocketError(int sockfd);
 
 
-struct sockaddr_in getAddr(int sockfd);  
+struct sockaddr_in getPeerAddr(int sockfd);  
+struct sockaddr_in getLocalAddr(int sockfd);  
 
 #endif
