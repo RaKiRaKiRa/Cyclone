@@ -7,3 +7,6 @@ target_link_libraries(TimeQueue_test Cyclone_net Cyclone_base)
 
 add_executable(Acceptor_test Acceptor_test.cc)
 target_link_libraries(Acceptor_test Cyclone_net Cyclone_base)
+
+add_executable(echo_test echo_multi.cc)
+target_link_libraries(echo_test Cyclone_net Cyclone_base)

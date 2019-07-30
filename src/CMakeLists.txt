@@ -10,13 +10,10 @@ set(SRCS
     Socket.cc
     SocketOpts.cc
     Acceptor.cc
-    #EventLoopThreadPool.cc
-    #HttpData.cc
-    #Main.cc
-    #Server.cc
-    #ThreadPool.cc
-    #Timer.cc
-    #Util.cc
+    EventLoopThreadPool.cc
+    Server.cc
+    Connection.cc
+    Buffer.cc
 )
 add_definitions(-std=c++11)
 include_directories(${PROJECT_SOURCE_DIR}/base)
