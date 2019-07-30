@@ -15,6 +15,7 @@
 #include <string>
 
 
+// 用Thread封装EventLoop
 class EventLoopThread : noncopyable
 {
 public:
@@ -22,6 +23,7 @@ public:
 
   ~EventLoopThread();
 
+  // 主线程调用，开启子线程调用detail::startThread => ThreadData::runInThread => func_(),即EventLoopThread::threadFunc()
   EventLoop* start();
 
 private:

@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-09 21:49
- * Last modified : 2019-07-09 22:17
+ * Last modified : 2019-07-29 14:00
  * Filename      : EventLoopThread.cc
  * Description   : 
  **********************************************************/
@@ -31,14 +31,14 @@ EventLoopThread::~EventLoopThread()
 void EventLoopThread::threadFunc()
 {
   EventLoop loop;
-  //等待线程启动
+  //通知EventLoop创建完毕
   {
     MutexGuard lock(mutex_);
     loop_ = &loop;
     cond_.notify();
   }
 
-  //循环于loop()
+  //线程启动，循环于loop()
   loop_ -> loop();
 
   // 该函数结束后，即loop()退出，loop_失效，因为EventLoop与该函数生命周期相同

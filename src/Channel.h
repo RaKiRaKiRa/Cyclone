@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-15 21:54
- * Last modified : 2019-07-17 00:03
+ * Last modified : 2019-07-26 22:09
  * Filename      : Channel.h
  * Description   : 
  **********************************************************/
@@ -15,6 +15,8 @@
 
 class EventLoop;
 
+//TODO:未保证Connection安全，应该在Channel中建立一个对应Connection的weak_ptr，在进行handleEvent时创建一个lock对象，结束时可以使其自动销毁
+//
 //负责一个fd的IO分发,封装其callback
 //一般再封装一层,如封装成TcpConnection再使用
 class Channel: noncopyable
@@ -37,6 +39,10 @@ public:
   void setWriteCallback(Callback cb)
   {
     writeCallback_ = std::move(cb);
+  }
+  void setCloseCallback(Callback cb)
+  {
+    closeCallback_ = std::move(cb);
   }
   void setErrorCallback(Callback cb)
   {
@@ -79,6 +85,14 @@ public:
   int index() const
   {
     return index_;
+  }
+  bool isWriting() const 
+  {
+    return events_ & k_Write; 
+  }
+  bool isReading() const
+  {
+    return events_ & k_Read;
   }
 
   // 开关读写事件,并通过EventLoop在Poller::updateChannel上更新事件列表和映射表

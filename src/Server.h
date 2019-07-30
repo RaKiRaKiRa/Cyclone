@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-17 01:02
- * Last modified : 2019-07-17 22:07
+ * Last modified : 2019-07-29 21:15
  * Filename      : Server.h
  * Description   : 
  **********************************************************/
@@ -16,18 +16,25 @@
 
 class Acceptor;
 class EventLoop;
+class EventLoopThreadPool;
 
+//Server运行监听并注册事件讲解：
 /*
- * 要想使用Server，需要
- *
- *  创建一个事件驱动循环，也就是Server所在线程的EventLoop（用于监听客户端连接请求）
- *  创建监听地址和端口
- *  创建Server并传入EventLoop和监听地址listenAddr
- *  设置各种回调函数
- *  调用Server::start()开启服务器
- *    调用EventLoop::loop()开始事件驱动循环
- */
+ * 1.创建服务器(Server)时，创建Acceptor，设置接收到客户端请求后执行的回调函数
+ * 2.Acceptor创建监听套接字，将监听套接字绑定到一个Channel中，设置可读回调函数为Acceptor::handleRead
+ * 3.服务器启动，调用Acceptor的listen函数创建监听套接字，同时将Channel添加到Poller中
+ * 4.有客户端请求连接，监听套接字可读，Channel被激活，调用可读回调函数(handleRead)
+ * 5.回调函数接收客户端请求，获得客户端套接字和地址，调用Server提供的回调函数(newConn)
+ * 6.Server的回调函数中创建Connection代表这个tcp连接，设置tcp连接各种回调函数(由用户提供给Server的三个半)
+ * 7.Server让tcp连接所属线程调用Connection::connectEstablish
+ * 8.connectEstablish开启对客户端套接字的Channel的可读监听，然后调用用户提供的回调函数
+ */ 
 
+//用户可以自己提供三个半事件
+//1.连接的建立 connCallback_
+//2.连接的断开 connCallback_
+//3.消息到达（描述符可读）messCallback_
+//4.消息发送完毕 writeCallback_
 class Server : noncopyable
 {
 public:
@@ -36,10 +43,13 @@ public:
   typedef std::function<void (const ConnectionPtr&)> WriteCompleteCallback; // 数据已从应用层写入缓冲区，并不代表对方已收到
   typedef std::shared_ptr<Connection> ConnectionPtr;
 
-  Server(EventLoop* loop, sockaddr_in& listenAddr);
+  Server(EventLoop* loop, const sockaddr_in& listenAddr, const std::string& name = "", bool ReusePort = true);
+
   ~Server();
 
   void start();
+
+  void setThreadNum(int num);
 
   //设置回调
   void setConnCallback(ConnCallback cb)
@@ -59,16 +69,21 @@ private:
   typedef std::map<std::string, ConnectionPtr> ConnectionMap;
 
   //创建新的Connection，绑定给Acceptor，新连接将加入ConnectionMap
+  // 执行调用顺序：poller_.poll()=>Channel::HandleEvent()=>Acceptor::HandleRead()=>Server::newConn()
   void newConn(int sockfd, const sockaddr_in& peerAddr);
+
+  void removeConn(const ConnectionPtr&);
+  void removeConnInLoop(const ConnectionPtr&);
 
   EventLoop* loop_;
   const std::string name_; 
   const std::string ipPort_;              //toIpPort(&peerAddr).c_str(),
   std::unique_ptr<Acceptor> acceptor_;    //用于接收新连接的接收器
+  std::unique_ptr<EventLoopThreadPool> threadPool_;
   ConnectionMap connections_;              //name->Connection*映射
 
   bool started_;
-  int nextConnId_;//下个连接的索引
+  int nextConnId_;//下个连接的ID,用于命名
 
   // 供用户设置的回调函数
   ConnCallback connCallback_;                   // 连接建立/断开事件回调函数

@@ -46,6 +46,7 @@ void Channel::handleEvent()
   //对方挂起？且没有可读数据，则关闭
   if((revents_ & POLLHUP) && !(revents_ & POLLIN))
   {
+    LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLHUP";
     if(closeCallback_)
       closeCallback_();
   }
@@ -53,6 +54,7 @@ void Channel::handleEvent()
   //错误事件或文件描述符未开
   if(revents_ & (POLLERR | POLLNVAL))
   {
+    //LOG_WARN << "pollerr | pollnval";
     if(errorCallback_)
       errorCallback_();
   }
@@ -62,6 +64,7 @@ void Channel::handleEvent()
   //POLLRDHUP即远端关闭连接或关闭写操作,当对端正常关闭的时候会触发POLLIN | POLLRDHUP
   if(revents_ & (POLLIN | POLLPRI | POLLRDHUP))
   {
+    //LOG_INFO <<" (POLLIN | POLLPRI | POLLRDHUP))";
     if(readCallback_)
       readCallback_();
   }
@@ -69,6 +72,7 @@ void Channel::handleEvent()
   //写事件
   if(revents_ & POLLOUT)
   {
+    //LOG_INFO <<" pollout ";
     if(writeCallback_)
       writeCallback_();
   }
