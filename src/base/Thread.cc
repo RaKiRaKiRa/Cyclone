@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-05-29 21:28
- * Last modified : 2019-07-04 22:57
+ * Last modified : 2019-08-09 22:44
  * Filename      : Thread.cc
  * Description   : 
  **********************************************************/
@@ -42,35 +42,19 @@ namespace CurrentThread
 }// CurrentThread
 
 
-// 对线程内实际运行函数的封装， 在执行真正函数前对线程信息进行初始化
-struct ThreadData
+void ThreadData::runInThread()
 {
-  typedef Thread::ThreadFunc ThreadFunc;
-  ThreadFunc func_;
-  std::string name_;
-  pid_t* tid_;
-  CountDownLatch* latch_;
+  *tid_ = CurrentThread::tid();
+  tid_ = NULL;//指向空,防止delete时伤及无辜
+  latch_->countDown();
+  latch_ =NULL;
 
-  ThreadData(ThreadFunc func, const std::string &name, pid_t* tid, CountDownLatch* latch):
-    func_(std::move(func)),
-    name_(name),
-    tid_(tid),
-    latch_(latch)
-  {}
-
-  void runInThread()
-  {
-    *tid_ = CurrentThread::tid();
-    tid_ = NULL;//指向空,防止delete时伤及无辜
-    latch_->countDown();
-    latch_ =NULL;
-    CurrentThread::t_threadName = name_.empty() ? "CycloneThread": name_.c_str();
-    prctl(PR_SET_NAME, CurrentThread::t_threadName);//设置线程名
-    
-    func_();//真正的线程执行函数
-    CurrentThread::t_threadName = "finished";
-  }
-}; //ThreadData
+  CurrentThread::t_threadName = name_.empty() ? "CycloneThread": name_.c_str();
+  prctl(PR_SET_NAME, CurrentThread::t_threadName);//设置线程名
+  
+  func_();//真正的线程执行函数
+  CurrentThread::t_threadName = "finished";
+}
 
 
 //Thread::start() => startThread() => ThreadData::runInThread() => ThreadFunc
@@ -113,11 +97,11 @@ void Thread::setDefaultName()
 //从而让操作系统在该线程结束时来回收它所占的资源，避免内存泄漏。
 Thread::~Thread()
 {
+  //为了在使用 pthread 时避免线程的资源在线程结束时不能得到正确释放，
+  //从而避免产生潜在的内存泄漏问题，在对待线程结束时，要确保该线程处于 detached 状态，从而让操作系统在该线程结束时来回收它所占的资源。
+  //否则就需要调用 pthread_join() 函数来对其进行资源回收。
   if(started_ && !joined_)
   {
-    //为了在使用 pthread 时避免线程的资源在线程结束时不能得到正确释放，
-    //从而避免产生潜在的内存泄漏问题，在对待线程结束时，要确保该线程处于 detached 状态，从而让操作系统在该线程结束时来回收它所占的资源。
-    //否则就需要调用 pthread_join() 函数来对其进行资源回收。
     pthread_detach(pthreadId_);
   }
 }

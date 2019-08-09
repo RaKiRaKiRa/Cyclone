@@ -36,7 +36,7 @@ void EventLoopThreadPool::start()
     snprintf(buf, sizeof buf, "%s%d", serverName_.c_str(), i);
     EventLoopThread* thread = new EventLoopThread(buf);
     // FIX : move？
-    threads_.push_back(  std::unique_ptr<EventLoopThread>(thread) );
+    threads_.push_back( std::move( std::unique_ptr<EventLoopThread>(thread) ));
     // 主线程调用start()后，子线程detail::startThread => ThreadData::runInThread => func_(),即EventLoopThread::threadFunc()，停留在loop.loop()上
     workloops_.push_back(thread -> start());
   }
