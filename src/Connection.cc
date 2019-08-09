@@ -30,6 +30,7 @@ void defaultConnCallback(const ConnectionPtr& conn)
 Connection::Connection(EventLoop *loop, std::string name, sockaddr_in local, sockaddr_in peer, int sockfd):
   loop_(loop),
   name_(name),
+  state_(kConnecting),
   peer_(peer),
   local_(local),
   socket_(new Socket(sockfd)),
@@ -72,6 +73,7 @@ void Connection::connDestroy()
 void Connection::connEstablish()
 {
   loop_ ->assertInLoopThread();
+  LOG << state();
   assert(state_ == kConnecting);
 
   setState(kConnected);
