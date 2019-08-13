@@ -52,6 +52,7 @@ class Buffer : noncopyable
 public:
   static const size_t kCheapPrepend = 8;    //预留空间，用于防止粘包
   static const size_t kInitialSize  = 1024; //默认数据存储大小
+  static const size_t kHeaderLen    = 4;    //default Header Size
 
   explicit Buffer(size_t initialSize = kInitialSize):
     buffer_(kCheapPrepend + kInitialSize),
@@ -148,6 +149,14 @@ public:
     hasWrite(len);
   }
 
+  void prepend(const void* data, size_t len)
+  {
+    assert(len <= prependableBytes());
+    readerIndex_ -= len;
+    const char* d = static_cast<const char*>(data);
+    std::copy(d, d + len, begin() + readerIndex());
+  }
+
   void append(std::string& str)
   {
     append(str.data(), str.size());
@@ -192,30 +201,28 @@ public:
   /*************************************  包头操作  **********************************/
   //包头在储存时为网络序，使用时需转化
   //获取包头并返回（移动readerIndex_)
-  int64_t readHeader()
+  int32_t readHeader()
   {
-    int64_t header = getHeader();
-    retrieve(sizeof(int64_t));
+    int32_t header = getHeader();
+    retrieve(kHeaderLen);
     return header;
   }
 
   //获取包头并返回（未移动readerIndex_)
-  int64_t getHeader() const
+  int32_t getHeader() const
   {
-    assert(readableBytes() >= sizeof(int64_t));
-    int64_t header = 0;
+    assert(readableBytes() >= kHeaderLen);
+    int32_t header = 0;
     memcpy(&header, peek(), sizeof header);
-    return networkToHost64(header);
+    return networkToHost32(header);
   }
 
   //写入一个包头
-  void setHeader(int64_t x)
+  void setHeader(int32_t x)
   {
-    assert(kCheapPrepend <= prependableBytes());
-    x = hostToNetwork64(x);
-    readerIndex_ -= kCheapPrepend;
-    char* d = static_cast<char*>(static_cast<void*>(&x));
-    std::copy(d, d + kCheapPrepend, begin() + readerIndex_);
+    assert(kHeaderLen <= prependableBytes());
+    int32_t len = hostToNetwork32(x);
+    prepend(&len, kHeaderLen);
   }
 
 private:
