@@ -1,10 +1,13 @@
+#ifndef THREADLOCALSINGLETON_H
+#define THREADLOCALSINGLETON_H
+
 #include "MutexLock.h"
 
 template<typename T>
-class ThreadLocalThread
+class ThreadLocalSingleton
 {
 public:
-  T& Instance()
+  static T& Instance()
   {
     if(obj_ == NULL)
     {
@@ -18,10 +21,10 @@ public:
   }
 
 private:
-  ThreadLocalThread(){}
-  ~ThreadLocalThread(){}
-  ThreadLocalThread(const ThreadLocalThread& obj) = delete;
-  ThreadLocalThread& operator=(const ThreadLocalThread& obj) = delete;
+  ThreadLocalSingleton(){}
+  ~ThreadLocalSingleton(){}
+  ThreadLocalSingleton(const ThreadLocalSingleton& obj) = delete;
+  ThreadLocalSingleton& operator=(const ThreadLocalSingleton& obj) = delete;
 
   static void Destroy()
   {
@@ -51,7 +54,18 @@ private:
     pthread_key_t key_;
   };
 
-  static Deleter     del_;
-  static MutexLock   mutex_;
-  static __thread T* obj_;
+  static Deleter              del_;
+  static __thread MutexLock   mutex_;
+  static __thread T*          obj_;
 };
+
+template<typename T>
+__thread T* ThreadLocalSingleton<T>::obj_ = NULL;
+
+template<typename T>
+typename ThreadLocalSingleton<T>::Deleter ThreadLocalSingleton::del_;
+
+template<typename T>
+__thread MutexLock ThreadLocalSingleton<T>::mutex_;
+
+#endif
