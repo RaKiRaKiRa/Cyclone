@@ -1,3 +1,11 @@
+/**********************************************************
+ * Author        : RaKiRaKiRa
+ * Email         : 763600693@qq.com
+ * Create time   : 2019-08-15 15:46
+ * Last modified : 2019-08-18 20:20
+ * Filename      : Singleton.h
+ * Description   : 
+ **********************************************************/
 #ifndef SINGLETON_H
 #define SINGLETON_H
 
@@ -11,7 +19,7 @@ public:
   {
     if(obj_ == NULL)
     {
-      MutexGaurd lock(mutex_);
+      MutexGuard lock(mutex_);
       if(obj_ == NULL)
       {
         obj_ = new T();
@@ -39,7 +47,7 @@ private:
 };
 
 template<typename T>
-T* Singleton<T>::obj_ volatile = NULL;
+T* volatile Singleton<T>::obj_ = NULL;
 
 template<typename T>
 MutexLock Singleton<T>::mutex_;
