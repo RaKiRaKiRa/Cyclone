@@ -154,7 +154,7 @@ public:
     assert(len <= prependableBytes());
     readerIndex_ -= len;
     const char* d = static_cast<const char*>(data);
-    std::copy(d, d + len, begin() + readerIndex());
+    std::copy(d, d + len, begin() + readerIndex_);
   }
 
   void append(std::string& str)

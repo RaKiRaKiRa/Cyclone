@@ -65,6 +65,21 @@ public:
     writeCompleteCallback_ = std::move(cb);
   }
 
+  std::string name() const
+  {
+    return name_;
+  }
+
+  std::string ipPort() const
+  {
+    return ipPort_;
+  }
+
+  EventLoop* loop() const
+  {
+    return loop_;
+  }
+
 private:
   typedef std::map<std::string, ConnectionPtr> ConnectionMap;
 
