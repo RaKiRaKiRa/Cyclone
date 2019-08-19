@@ -23,3 +23,18 @@
 - 用RAII方法封装socket file descriptor（Socket.h , Socket.cc）
 - 将Socket与Channel再次封装成用于异步监听、接收新连接的RAII类（Acceptor.cc , Acceptor.h）
   - Acceptor::accept中用while包裹accept，一直到不能再accept，这种写法在同时连接的请求很少（比如一次只有一个连接），会多一次accept才能跳出循环，我认为这样的代价其在短连接中换来的效率提升相比微不足道。
+
+
+
+
+
+### v0.4
+
+- 将EventLoop与Thread封装成EventLoopThread，进一步封装成EventLoopThreadPoll线程池，实现one thread one loop
+- 将Acceptor与EventLoopThreadPool封装成以epoll( ET )+非阻塞IO为基础的Server与Connection，实现基本的服务器结构
+- 暴露connectionCallback、messageCallback、WriteCompleteCallback三个接口，分别由用户处理打开新连接、关闭连接、收到数据、写数据完成这四个事件
+- 实现连接的优雅关闭，保证收发数据的完整性。
+  - 使用shutdown关闭进行关闭，即把主动关闭连接分为两步：关闭本地写端，等对方关闭。
+  - 若正在发送数据，则先将状态设置为kDisconnecting，待数据发送完毕后，检查状态判断是否shutdown。
+- 在应用层对vector<char>封装，实现缓冲区Buffer，加入写包头与读包头接口，用于处理粘包。
+- 使用时间轮技术，完成加入应用层心跳包HeartBeat的服务器框架serverWithHeartBeat。
