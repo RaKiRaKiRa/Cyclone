@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-30 17:33
- * Last modified : 2019-07-28 19:54
+ * Last modified : 2019-08-19 13:26
  * Filename      : Callback.h
  * Description   : 
  **********************************************************/
@@ -23,6 +23,7 @@ typedef std::function<void()> TimerCallback;
 class Buffer;
 class Connection;
 typedef std::shared_ptr<Connection> ConnectionPtr;
+typedef std::weak_ptr<Connection> ConnectionWeakPtr;
 
 typedef std::function<void (const ConnectionPtr&)> ConnCallback;          //连接事件
 typedef std::function<void (const ConnectionPtr&, Buffer*)> MessCallback; //消息到达事件，fd可读

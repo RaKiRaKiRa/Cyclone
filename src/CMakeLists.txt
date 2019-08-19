@@ -12,6 +12,7 @@ set(SRCS
     Acceptor.cc
     EventLoopThreadPool.cc
     Server.cc
+    serverWithHeartBeat.cc
     Connection.cc
     Buffer.cc
 )
