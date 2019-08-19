@@ -30,6 +30,7 @@
 
 ### v0.4
 
+- 加入 单例与ThreadLocal单例接口
 - 将EventLoop与Thread封装成EventLoopThread，进一步封装成EventLoopThreadPoll线程池，实现one thread one loop
 - 将Acceptor与EventLoopThreadPool封装成以epoll( ET )+非阻塞IO为基础的Server与Connection，实现基本的服务器结构
 - 暴露connectionCallback、messageCallback、WriteCompleteCallback三个接口，分别由用户处理打开新连接、关闭连接、收到数据、写数据完成这四个事件
