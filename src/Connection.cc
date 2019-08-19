@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-18 15:26
- * Last modified : 2019-07-28 17:35
+ * Last modified : 2019-08-19 16:55
  * Filename      : Connection.cc
  * Description   : 
  **********************************************************/
@@ -34,7 +34,8 @@ Connection::Connection(EventLoop *loop, std::string name, sockaddr_in local, soc
   peer_(peer),
   local_(local),
   socket_(new Socket(sockfd)),
-  channel_(new Channel(loop, sockfd))
+  channel_(new Channel(loop, sockfd)),
+  anyPtr(NULL)
 {
   channel_ -> setReadCallback(std::bind(&Connection::handleRead,this));
   channel_ -> setWriteCallback(std::bind(&Connection::handleWrite,this));
@@ -152,7 +153,7 @@ void Connection::handleClose()
 {
   loop_ -> assertInLoopThread();
   LOG_TRACE <<"fd = "<<channel_ -> fd() << " state="<<state();
-  assert(state_ == kConnected || state_ == kConnecting);
+  assert(state_ == kConnected || state_ == kDisconnecting);
   setState(kDisconnected);
   // 停止新的事件产生
   channel_ -> disableAll();
@@ -213,7 +214,7 @@ void Connection::delayClose(double seconds)
 void Connection::forceCloseInLoop()
 {
   loop_ -> assertInLoopThread();
-  if(state_ == kConnected || state_ == kConnecting)
+  if(state_ == kConnected || state_ == kDisconnecting)
   {
     handleClose();
   }

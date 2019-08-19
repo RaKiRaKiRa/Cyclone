@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-16 21:45
- * Last modified : 2019-07-29 21:11
+ * Last modified : 2019-08-19 14:56
  * Filename      : Connection.h
  * Description   : 
  **********************************************************/
@@ -112,6 +112,17 @@ public:
   //void sendInLoop(const char* data, size_t len);
   void sendInLoop(const std::string& message);
 
+
+  void setAnyPtr(void* ptr)
+  {
+    anyPtr = ptr;
+  }
+
+  void *getAnyPtr() const
+  {
+    return anyPtr;
+  }
+
 private:
   enum StateE {kConnecting, kConnected, kDisconnecting, kDisconnected};//连接状态
   void setState(StateE s)
@@ -152,6 +163,8 @@ private:
 
   Buffer inputBuffer_;
   Buffer outputBuffer_;
+
+  void* anyPtr;
 };
   
 #endif
