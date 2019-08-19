@@ -10,3 +10,6 @@ target_link_libraries(Acceptor_test Cyclone_net Cyclone_base)
 
 add_executable(echo_test echo_multi.cc)
 target_link_libraries(echo_test Cyclone_net Cyclone_base)
+
+add_executable(echo_heart echo_heart.cc)
+target_link_libraries(echo_heart Cyclone_net Cyclone_base)
