@@ -13,6 +13,7 @@
 #include "LogStream.h"
 #include "CurrentThread.h"
 #include <string>
+
 #define LOG if(Logger::logLevel() <= Logger::INFO) \
     Logger(__FILE__, __LINE__, __func__).stream()
 #define LOG_TRACE  if(Logger::logLevel() <= Logger::TRACE) \
@@ -54,11 +55,13 @@ public:
   }
   static void setOutput(OutputFunc);
   static void setFlush(FlushFunc);
+
+
   static void setLogLevel(Logger::LogLevel level)
   {
     minLevel_ = level;
   }
-  static LogLevel logLevel() const
+  static LogLevel logLevel()
   {
     return minLevel_;
   }
