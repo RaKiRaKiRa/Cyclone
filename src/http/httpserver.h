@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 19:21
- * Last modified : 2019-08-27 20:29
+ * Last modified : 2019-08-28 16:17
  * Filename      : httpserver.h
  * Description   : 
  **********************************************************/
@@ -41,13 +41,13 @@ private:
   // receive and analyze request, and response
   void onMessage(const ConnectionPtr& conn, Buffer* buf);
 
-  // receive and analyze request
-  void getRequest(const ConnectionPtr& conn);
+  // 构造并发送response
+  void onRequest(const ConnectionPtr& conn, httpRequest& request);
 
-  // default function of getting response by resquest
-  static void fillResponse(httpRequest& request, httpResponse* response);
+  // 默认构造response
+  static void defaultHttpCallback(httpRequest& request, httpResponse* response);
 
-  // get response by resquest
+  // 构造response
   httpCallback httpCallback_;
 
   serverWithHeartBeat server_;

@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:09
- * Last modified : 2019-08-27 20:29
+ * Last modified : 2019-08-28 15:59
  * Filename      : httpContext.h
  * Description   : 
  **********************************************************/
@@ -14,12 +14,44 @@
 class httpContext
 {
 public:
+  enum parseState
+  {
+    kRequestLine,    // 正在解析请求行
+    kRequestHeader,  // 正在解析头部字段
+    kRequestBody,    // 正在解析请求体
+    kComplete,       // 解析结束
+  };
+  
+  httpContext();
+
   bool parseRequest(Buffer* buf);
 
-  bool getAll();
+  bool getAll()
+  {
+    return state_ == kComplete;
+  }
 
-  httpRequest& getRequest() const;
+  void reset()
+  {
+    state_ = kRequestLine;
+    httpRequest tmp;
+    std::swap(tmp, request_);
+  }
+
+  httpRequest& Request()
+  {
+    return request_;
+  }
+  const httpRequest& Request() const
+  {
+    return request_;
+  }
+
 private:
+  bool parseRequestLine(const char* begin, const char* end);
+
+  parseState state_;
+
   httpRequest request_;
 };
 
