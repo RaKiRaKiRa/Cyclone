@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-18 15:34
- * Last modified : 2019-07-24 20:30
+ * Last modified : 2019-08-28 12:09
  * Filename      : Buffer.h
  * Description   : 
  **********************************************************/
@@ -15,7 +15,7 @@
 #include <vector>
 #include <algorithm>
 #include <string.h>  //memcpy
-//#include <memory>
+#include <memory>
 #include <assert.h>
 
 /*
@@ -92,9 +92,36 @@ public:
   {
     return begin() + writerIndex_;
   }
+
   const char* beginWrite() const
   {
     return begin() + writerIndex_;
+  }
+
+  const char* findCRLF(const char* begin) const
+  {
+    assert(begin >= peek());
+    assert(begin < beginWrite());
+    const char* crlf = std::search(begin, beginWrite(), kCRLF, kCRLF + 2);
+    return crlf == beginWrite() ? NULL : crlf;
+  }
+
+  const char* findEOF(const char* begin) const
+  {
+    assert(begin >= peek());
+    assert(begin < beginWrite());
+    const char* eof =static_cast<const char*>( memchr(begin, '\n', beginWrite() - begin) );
+    return eof;
+  }
+
+  const char* findCRLF() const
+  {
+    return findCRLF(peek());
+  }
+
+  const char* findEOF() const 
+  {
+    return findEOF(peek());
   }
   /*************************************  读  **********************************/
 
@@ -199,7 +226,7 @@ public:
   }
 
   /*************************************  包头操作  **********************************/
-  //包头在储存时为网络序，使用时需转化
+  //包头在储存时为二进制网络序，使用时需转化
   //获取包头并返回（移动readerIndex_)
   int32_t readHeader()
   {
@@ -239,7 +266,15 @@ private:
   std::vector<char> buffer_;                //数据是通过vector存放，可以使用vector封装好的resize，方便
   size_t readerIndex_;
   size_t writerIndex_;
+  static const char kEOF;
+  static const char kCRLF[];
 };
+
+const char Buffer::kEOF = '\n';
+const char Buffer::kCRLF[] = "\r\n";
+
+
+
 
 
 #endif
