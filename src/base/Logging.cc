@@ -13,6 +13,8 @@
 #include <sys/time.h>
 #include <errno.h>
 
+Logger::LogLevel minLevel_ = Logger::TRACE;
+
 const char* LogLevelName[Logger::NUM_LOG_LEVELS] = 
 {
   "TRACE ",

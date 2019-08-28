@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-19 11:38
- * Last modified : 2019-08-19 18:42
+ * Last modified : 2019-08-28 20:05
  * Filename      : serverWithHeartBeat.cc
  * Description   : 
  **********************************************************/
@@ -53,8 +53,7 @@ void serverWithHeartBeat::onConnection(const ConnectionPtr& conn)
   else
   {
     assert(conn -> getAnyPtr() != NULL);
-    EntryWeakPtr entryWP = (static_cast<Entry*>(conn -> getAnyPtr()))->getWP();
-    LOG_DEBUG <<"Entry use_count = " << entryWP.use_count();
+    conn -> setAnyPtr(NULL);
   }
 }
 

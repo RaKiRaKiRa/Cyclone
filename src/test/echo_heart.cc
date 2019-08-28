@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int numThreads = 0;
+int numThreads = 3;
 
 
 AsyncLogging *logptr = NULL;
@@ -34,6 +34,7 @@ public:
     server_.setConnCallback(std::bind(&EchoServer::onConnection, this, _1));
     server_.setMessCallback(std::bind(&EchoServer::onMessage, this, _1, _2));
     server_.setThreadNum(numThreads);
+    server_.setprintStatus(true);
   }
 
   void start()
@@ -51,8 +52,9 @@ public:
   // buf一般是Connection::inputBuffer_
   void onMessage(const ConnectionPtr& conn, Buffer* buf)
   {
-    std::string s(buf -> toString());
-    conn -> send(s);
+  //  std::string s(buf -> toString());
+  //  conn -> send(s);
+    conn -> send(buf);
   }
 
 private:
@@ -63,8 +65,9 @@ private:
 
 int main(int argc, char* argv[])
 {
+  setLogLevel(Logger::INFO);
   logptr = new AsyncLogging("asynclog", 50*1024*1000);
-  Logger::setOutput(output);
+//  Logger::setOutput(output);
   logptr -> start();
 
   LOG_INFO <<"PID = " << getpid() <<", tid = " << CurrentThread::tid();

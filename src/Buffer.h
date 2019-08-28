@@ -55,7 +55,7 @@ public:
   static const size_t kHeaderLen    = 4;    //default Header Size
 
   explicit Buffer(size_t initialSize = kInitialSize):
-    buffer_(kCheapPrepend + kInitialSize),
+    buffer_(kCheapPrepend + initialSize),
     readerIndex_(kCheapPrepend),
     writerIndex_(kCheapPrepend)
   {}
@@ -269,11 +269,6 @@ private:
   static const char kEOF;
   static const char kCRLF[];
 };
-
-const char Buffer::kEOF = '\n';
-const char Buffer::kCRLF[] = "\r\n";
-
-
 
 
 

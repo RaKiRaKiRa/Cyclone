@@ -14,19 +14,19 @@
 #include "CurrentThread.h"
 #include <string>
 
-#define LOG if(Logger::logLevel() <= Logger::INFO) \
+#define LOG if(logLevel() <= Logger::INFO) \
     Logger(__FILE__, __LINE__, __func__).stream()
-#define LOG_TRACE  if(Logger::logLevel() <= Logger::TRACE) \
+#define LOG_TRACE  if(logLevel() <= Logger::TRACE) \
     Logger(__FILE__, __LINE__, __func__, Logger::TRACE).stream()
-#define LOG_DEBUG  if(Logger::logLevel() <= Logger::DEBUG) \
+#define LOG_DEBUG  if(logLevel() <= Logger::DEBUG) \
     Logger(__FILE__, __LINE__, __func__, Logger::DEBUG).stream()
-#define LOG_INFO   if(Logger::logLevel() <= Logger::INFO) \
+#define LOG_INFO   if(logLevel() <= Logger::INFO) \
     Logger(__FILE__, __LINE__, __func__, Logger::INFO ).stream()
-#define LOG_WARN   if(Logger::logLevel() <= Logger::WARN) \
+#define LOG_WARN   if(logLevel() <= Logger::WARN) \
     Logger(__FILE__, __LINE__, __func__, Logger::WARN ).stream()
-#define LOG_ERROR  if(Logger::logLevel() <= Logger::ERROR) \
+#define LOG_ERROR  if(logLevel() <= Logger::ERROR) \
     Logger(__FILE__, __LINE__, __func__, Logger::ERROR).stream()
-#define LOG_FATAL  if(Logger::logLevel() <= Logger::FATAL) \
+#define LOG_FATAL  if(logLevel() <= Logger::FATAL) \
     Logger(__FILE__, __LINE__, __func__, Logger::FATAL).stream()
 
 class AsyncLogging;
@@ -57,14 +57,6 @@ public:
   static void setFlush(FlushFunc);
 
 
-  static void setLogLevel(Logger::LogLevel level)
-  {
-    minLevel_ = level;
-  }
-  static LogLevel logLevel()
-  {
-    return minLevel_;
-  }
 private:
   class Impl
   {
@@ -78,10 +70,18 @@ private:
     LogLevel level_;
   };
   Impl impl_;
-  static LogLevel minLevel_;
   //static std::string logFileName;
 };
 
-Logger::LogLevel Logger::minLevel_ = Logger::TRACE;
+extern Logger::LogLevel minLevel_;
+
+inline void setLogLevel(Logger::LogLevel level)
+{
+  minLevel_ = level;
+}
+inline Logger::LogLevel logLevel()
+{
+  return minLevel_;
+}
 
 #endif

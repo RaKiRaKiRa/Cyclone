@@ -8,6 +8,8 @@
  **********************************************************/
 
 #include "Buffer.h"
+const char Buffer::kEOF = '\n';
+const char Buffer::kCRLF[] = "\r\n";
 /*
  * 从tcp缓冲区(sockfd)中读取数据，存放到应用层缓冲区中
  *   两种情况
