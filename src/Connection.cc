@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-18 15:26
- * Last modified : 2019-08-19 16:55
+ * Last modified : 2019-08-28 16:08
  * Filename      : Connection.cc
  * Description   : 
  **********************************************************/
@@ -50,6 +50,7 @@ Connection::~Connection()
 {
   LOG_DEBUG << "Connection [" << name_ <<"] at " <<this <<" fd = "<<channel_ -> fd() << " state="<<state();
   assert(state_ == kDisconnected);
+  assert(anyPtr == NULL);
 }
 
 // Connection析构前的最后一步，在handleClose的下一次poll后进行
