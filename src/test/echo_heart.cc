@@ -51,7 +51,8 @@ public:
   // buf一般是Connection::inputBuffer_
   void onMessage(const ConnectionPtr& conn, Buffer* buf)
   {
-    conn -> send(buf);
+    std::string s(buf -> toString());
+    conn -> send(s);
   }
 
 private:
