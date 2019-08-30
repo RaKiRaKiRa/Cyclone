@@ -23,6 +23,7 @@ public:
     k200Ok               = 200, //正常处理
     k301MovedPermanently = 301, //永久性重定向，表示已经分配了新URI
     k400BadRequest       = 400, //有语法错误
+    //k403Forbidden        = 403, //拒绝访问
     k404NotFound         = 404, //服务器上没有请求的资源
   };
 
@@ -59,6 +60,7 @@ public:
   {
     addHeader("Content-Type", fileType);
   }
+  
 
   // 构造response报文
   void toBuffer(Buffer* buf);

@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:12
- * Last modified : 2019-08-30 17:32
+ * Last modified : 2019-08-30 23:11
  * Filename      : httpRequest.h
  * Description   : 
  **********************************************************/
@@ -121,9 +121,27 @@ public:
    else
      return "";
   }
+
   int64_t  receiveTime()
   {
     return receiveTime_;
+  }
+
+  std::string contentType() const
+  {
+    if(path_.empty())
+      return "";
+
+    if(path_.find(".html") != std::string::npos)
+      return "text/html";
+    if(path_.find(".jpg") != std::string::npos)
+      return "image/jpeg";
+    if(path_.find(".mp4") != std::string::npos)
+      return "video/mp4";
+    if(path_.find(".gif") != std::string::npos)
+      return "image/gif";
+
+    return "text/plain";
   }
 
 private:
