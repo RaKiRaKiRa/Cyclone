@@ -2,15 +2,17 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:12
- * Last modified : 2019-08-30 01:08
+ * Last modified : 2019-08-30 17:32
  * Filename      : httpRequest.h
  * Description   : 
  **********************************************************/
 
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
-#include <map>
+
 #include <string>
+#include <unordered_map>
+#include <map>
 
 class httpRequest
 {
@@ -80,6 +82,11 @@ public:
     header_[key] = value;
   }
 
+  void setReceiveTime(int64_t time)
+  {
+    receiveTime_ = time;
+  }
+
   //获取
   Version version() const 
   {
@@ -106,13 +113,17 @@ public:
   {
     return query_;
   }
-  std::string header(std::string s)
+  std::string header(const std::string& s)
   {
-   std::map<std::string, std::string>::iterator it = header_.find(s);
+   std::unordered_map<std::string, std::string>::iterator it = header_.find(s);
    if(it != header_.end())
      return it -> second;
    else
      return "";
+  }
+  int64_t  receiveTime()
+  {
+    return receiveTime_;
   }
 
 private:
@@ -120,7 +131,8 @@ private:
   Version version_;
   std::string path_;
   std::string query_;
-  std::map<std::string, std::string> header_;
+  int64_t receiveTime_;
+  std::unordered_map<std::string, std::string> header_;
 };
 
 #endif
