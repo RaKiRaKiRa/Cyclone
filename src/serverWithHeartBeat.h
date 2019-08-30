@@ -76,6 +76,7 @@ private:
     {
       LOG_DEBUG << "~Entry()";
       ConnectionPtr conn = weakConn_.lock();
+      // 若连接已关闭，Connection则已经析构，则lock()后为NULL
       if(conn)
         conn -> forceClose();
       LOG_DEBUG << "~Entry() end";
