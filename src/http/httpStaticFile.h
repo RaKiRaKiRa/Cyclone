@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-30 20:58
- * Last modified : 2019-08-31 00:48
+ * Last modified : 2019-08-31 15:43
  * Filename      : httpStaticFile.h
  * Description   : 
  **********************************************************/
@@ -11,6 +11,7 @@
 #define HTTPSTATICFILE_H
 #include <string>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include "../base/Singleton.h"
 #include "httpType.h"
 
@@ -29,6 +30,8 @@ public:
 
   bool open();
 
+  bool writeTo(std::string& body);  
+
   fileState state()
   {
     return state_;
@@ -38,7 +41,7 @@ public:
   std::string contentType() const
   {
     size_t point = file_.rfind('.');
-    return typeMap_.Instance().getType(file_.substr(point));
+    return Singleton<Type>::Instance().getType(file_.substr(point));
 
    // if(file_.empty())
    //   return "";
@@ -55,12 +58,14 @@ public:
    // return "text/plain";
   }
 
+  int fd() const { return fd_; }
+
 private:
   std::string file_;
   int fd_;
   struct stat sbuf_;
   fileState state_;
-  Singleton<Type> typeMap_;
+  //Singleton<Type> typeMap_;
 };
 
 
