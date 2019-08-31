@@ -44,10 +44,10 @@ private:
   // 构造并发送response
   void onRequest(const ConnectionPtr& conn, httpRequest& request);
 
-  // 默认构造response
+  // 默认构造静态response
   static void staticSourceRequest(httpRequest& request, httpResponse* response);
 
-  // 构造response
+  // 构造请求response
   httpCallback httpCallback_;
 
   serverWithHeartBeat server_;
