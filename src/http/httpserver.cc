@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 19:40
- * Last modified : 2019-08-28 16:37
+ * Last modified : 2019-08-31 21:14
  * Filename      : httpserver.cc
  * Description   : 
  **********************************************************/
@@ -16,7 +16,7 @@ httpServer::httpServer(EventLoop* loop, const sockaddr_in &lis):
 {
   server_.setConnCallback(std::bind(&httpServer::onConnection, this, _1));
   server_.setMessCallback(std::bind(&httpServer::onMessage, this, _1, _2));
-  setHttpCallback(std::bind(&httpServer::defaultHttpCallback, _1, _2));
+  setHttpCallback(std::bind(&httpServer::staticSourceRequest, _1, _2));
 }
 
 
@@ -69,7 +69,7 @@ void httpServer::onRequest(const ConnectionPtr& conn, httpRequest& request)
 }
 
 // 构造response
-void httpServer::defaultHttpCallback(httpRequest& request, httpResponse* response)
+void httpServer::staticSourceRequest(httpRequest& request, httpResponse* response)
 {
 
 }

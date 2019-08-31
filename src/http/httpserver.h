@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 19:21
- * Last modified : 2019-08-28 16:17
+ * Last modified : 2019-08-31 21:14
  * Filename      : httpserver.h
  * Description   : 
  **********************************************************/
@@ -45,7 +45,7 @@ private:
   void onRequest(const ConnectionPtr& conn, httpRequest& request);
 
   // 默认构造response
-  static void defaultHttpCallback(httpRequest& request, httpResponse* response);
+  static void staticSourceRequest(httpRequest& request, httpResponse* response);
 
   // 构造response
   httpCallback httpCallback_;
