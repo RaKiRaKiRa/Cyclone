@@ -20,7 +20,7 @@ class httpServer:noncopyable
 public:
   typedef std::function<void(httpRequest&, httpResponse* )> httpCallback ;
 
-  httpServer(EventLoop* loop, const sockaddr_in &listenAddr);  
+  httpServer(EventLoop* loop, const sockaddr_in &listenAddr,int threadNum = 4,int keepAliveTime = 60, std::string name = "httpServer", bool ReusePort = true);  
 
   void setThreadNum(int num)
   {
@@ -51,6 +51,7 @@ private:
   httpCallback httpCallback_;
 
   serverWithHeartBeat server_;
+  std::string keepAliveStr;
 
 };
 

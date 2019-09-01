@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:12
- * Last modified : 2019-08-30 23:11
+ * Last modified : 2019-09-01 21:19
  * Filename      : httpRequest.h
  * Description   : 
  **********************************************************/
@@ -71,7 +71,8 @@ public:
     while(colon < end && *colon == ' ')
       ++colon;
     std::string value(colon, end);
-    for(int i = value.size() - 1; i >=0 ; --i)
+    int i = 0;
+    for(i = value.size() - 1; i >=0 ; --i)
     {
       if(value[i] != ' ')
       {
@@ -79,6 +80,9 @@ public:
         break;
       }
     }
+    if(i == 0 && value[i] == ' ')
+      return ;
+
     header_[key] = value;
   }
 

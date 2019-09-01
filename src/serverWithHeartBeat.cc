@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-19 11:38
- * Last modified : 2019-08-28 20:05
+ * Last modified : 2019-09-01 20:23
  * Filename      : serverWithHeartBeat.cc
  * Description   : 
  **********************************************************/
@@ -13,7 +13,8 @@
 serverWithHeartBeat::serverWithHeartBeat(EventLoop* loop,const sockaddr_in& listenAddr, const std::string& name, bool ReusePort, int idleSec):
   server_(loop, listenAddr, name, ReusePort),
   bucketList_(idleSec),
-  printStatus(false)
+  printStatus(false),
+  idleSec_(idleSec)
 {
   server_.setConnCallback(std::bind(&serverWithHeartBeat::onConnection, this, _1));
   server_.setMessCallback(std::bind(&serverWithHeartBeat::onMessage, this, _1, _2));

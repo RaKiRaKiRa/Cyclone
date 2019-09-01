@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-18 23:11
- * Last modified : 2019-08-19 18:42
+ * Last modified : 2019-09-01 20:23
  * Filename      : serverWithHeartBeat.h
  * Description   : 
  **********************************************************/
@@ -59,6 +59,10 @@ public:
     return server_.loop();
   }
 
+  int keepAliveTime() const
+  {
+    return idleSec_;
+  }
   void setprintStatus(bool b)
   {
     printStatus = b;
@@ -112,6 +116,7 @@ private:
   BucketList bucketList_;
 
   bool printStatus;
+  int idleSec_;
 
 };
 #endif

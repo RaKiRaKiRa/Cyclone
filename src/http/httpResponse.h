@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:10
- * Last modified : 2019-08-31 21:33
+ * Last modified : 2019-09-01 21:20
  * Filename      : httpResponse.h
  * Description   : 
  **********************************************************/
@@ -27,7 +27,7 @@ public:
     k404NotFound         = 404, //服务器上没有请求的资源
   };
 
-  httpResponse(bool close) :statueCode_(kUnkown), closeConnection_(close) {}
+  explicit httpResponse(bool close) :statueCode_(kUnkown), closeConnection_(close) {}
   ~httpResponse(){  }
   
   // 设置

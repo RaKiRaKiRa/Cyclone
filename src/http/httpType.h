@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-31 00:24
- * Last modified : 2019-08-31 00:36
+ * Last modified : 2019-09-01 21:14
  * Filename      : httpType.h
  * Description   : 
  **********************************************************/
@@ -31,6 +31,8 @@ public:
     type_[".txt"]    = "text/plain";
     type_[".mp3"]    = "audio/mp3";
     type_["default"] = "text/html";
+    type_[".js"]     = "application/javascript";
+    type_[".css"]    = "text/css";
   }
 
   std::string getType(std::string key)
