@@ -2,15 +2,20 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 19:40
- * Last modified : 2019-09-01 20:52
+ * Last modified : 2019-09-03 20:37
  * Filename      : httpserver.cc
  * Description   : 
  **********************************************************/
 #include "httpserver.h"
 #include "httpContext.h"
 #include "httpResponse.h"
+#include "httpStaticFile.h"
 #include "../Connection.h"
 #include <string.h>
+#include <string>
+#include <unistd.h>
+
+std::string webPath;
 
 //httpServer(EventLoop* loop, const sockaddr_in &listenAddr,int threadNum = 4,int keepAliveTime = 60, std::string name = "httpServer", bool ReusePort = true);  
 //serverWithHeartBeat(EventLoop* loop, const sockaddr_in& listenAddr, const std::string& name = "", bool ReusePort = true, int idleSec = 20);
@@ -73,15 +78,16 @@ void httpServer::onRequest(const ConnectionPtr& conn, httpRequest& request)
   bool close = (connection == "close") || (request.version() == httpRequest::kHttp10 && connection != "Keep-Alive" && connection != "keep-alive");
   httpResponse response(close);
 
-  //告诉浏览器是否提供长连接及连接时长
-  response.addHeader("Connection", close ? "Close" : "Keep-Alive");
-  if(!close)
+  // 根据request构造response
+  httpCallback_(request, &response);
+
+  // 告诉浏览器是否提供长连接及连接时长
+  // 不使用close是因为httpCallback可能会导致变化 (NotFound)
+  response.addHeader("Connection", response.closeConnection() ? "Close" : "Keep-Alive");
+  if(!response.closeConnection())
   {
     response.addHeader("Keep-Alive", keepAliveStr);
   }
-
-  // 根据request构造response
-  httpCallback_(request, &response);
 
   Buffer buf;
   // 构造response报文并发送
@@ -95,8 +101,43 @@ void httpServer::onRequest(const ConnectionPtr& conn, httpRequest& request)
 
 }
 
-// TODO 构造静态请求response
+// 构造静态请求response
 void httpServer::staticSourceRequest(httpRequest& request, httpResponse* response)
 {
-
+  if(webPath.empty())
+  {
+    char tmpPath[80];
+    getcwd(tmpPath, 80);
+    webPath = tmpPath;
+  }
+  std::string filename = request.path();
+  if(filename == "/")
+    filename.append("index.html");
+  filename = webPath + filename;
+  StaticFile sFile(filename);
+  // 若读取文件进入body成功
+  if(sFile.open() && response -> setBody(sFile))
+  {
+    assert(sFile.state() == StaticFile::OK);
+    LOG_WARN << filename << " open&read OK ";
+    response -> setStatusCode(httpResponse::k200Ok);
+    response -> setStatusMessage("OK");
+    response -> addHeader("Server", "Cyclone");
+    response -> setContentType(std::move(sFile.contentType()));
+  }
+  // 失败 发送404NotFount报文
+  else
+  {
+    assert(sFile.state() == StaticFile::NotFound || sFile.state() == StaticFile::ReadError);
+    if(sFile.state() == StaticFile::NotFound)
+    {
+      LOG_WARN << filename << " Not Fount ";
+    }
+    else if(sFile.state() == StaticFile::ReadError)
+    {
+      LOG_WARN << filename << " Read Error ";
+    }
+    response -> setNotFound();
+  }
+  
 }
