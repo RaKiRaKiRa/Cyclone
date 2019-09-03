@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:10
- * Last modified : 2019-09-01 21:20
+ * Last modified : 2019-09-03 20:46
  * Filename      : httpResponse.h
  * Description   : 
  **********************************************************/
@@ -13,11 +13,12 @@
 #include <unordered_map>
 #include <map>
 #include <string>
+#include "httpStaticFile.h"
 
 class httpResponse
 {
 public:
-  enum httpStatueCode
+  enum httpStatusCode
   {
     kUnkown,
     k200Ok               = 200, //正常处理
@@ -27,18 +28,18 @@ public:
     k404NotFound         = 404, //服务器上没有请求的资源
   };
 
-  explicit httpResponse(bool close) :statueCode_(kUnkown), closeConnection_(close) {}
+  explicit httpResponse(bool close) :statusCode_(kUnkown), closeConnection_(close) {}
   ~httpResponse(){  }
   
   // 设置
-  void setStatueCode(httpStatueCode code)
+  void setStatusCode(httpStatusCode code)
   {
-    statueCode_ = code;
+    statusCode_ = code;
   }
 
-  void setStatueMessage(std::string mess)
+  void setStatusMessage(std::string mess)
   {
-    statueMessage_ = std::move(mess);
+    statusMessage_ = std::move(mess);
   }
 
   void setCloseConnection(bool close)
@@ -56,11 +57,26 @@ public:
     body_ = std::move(body);
   }
 
+  bool setBody(StaticFile& staticFile)
+  {
+    return staticFile.writeTo(body_);
+  }
+
   void setContentType(std::string fileType)
   {
     addHeader("Content-Type", fileType);
   }
   
+  void setNotFound()
+  {
+    setStatusCode(k404NotFound);
+    setStatusMessage("Not Found");
+    setContentType("text/html");
+    addHeader("Server", "Cyclone");
+    setBody("<html><head><title>This is title</title></head>"
+      "<body><h1>404 Not Found</h1></html>");
+    setCloseConnection(true);
+  }
 
   // 构造response报文
   void toBuffer(Buffer* buf);
@@ -72,8 +88,8 @@ public:
 
 private:
   // 各种报文信息
-  httpStatueCode statueCode_;
-  std::string statueMessage_;
+  httpStatusCode statusCode_;
+  std::string statusMessage_;
   bool closeConnection_;
 
   std::unordered_map<std::string, std::string> header_;
