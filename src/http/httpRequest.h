@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:12
- * Last modified : 2019-09-01 21:19
+ * Last modified : 2019-09-03 20:47
  * Filename      : httpRequest.h
  * Description   : 
  **********************************************************/
@@ -130,7 +130,7 @@ public:
   {
     return receiveTime_;
   }
-
+/*
   std::string contentType() const
   {
     if(path_.empty())
@@ -147,7 +147,7 @@ public:
 
     return "text/plain";
   }
-
+*/
 private:
   Method method_;
   Version version_;
