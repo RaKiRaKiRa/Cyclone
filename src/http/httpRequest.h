@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:12
- * Last modified : 2019-09-03 20:47
+ * Last modified : 2019-09-04 22:18
  * Filename      : httpRequest.h
  * Description   : 
  **********************************************************/
@@ -63,7 +63,7 @@ public:
   }
 
   //TODO
-  void setHeader(char *beg, char *colon, char *end)
+  void addHeader(const char *beg, const char *colon, const char *end)
   {
     std::string key(beg, colon);
 
@@ -90,8 +90,16 @@ public:
   {
     receiveTime_ = time;
   }
+  void setBody(const char *beg, const char *end)
+  {
+    body_.assign(beg, end);
+  }
 
   //获取
+  std::string body() const
+  {
+    return body_;
+  }
   Version version() const 
   {
     return version_;
@@ -130,29 +138,12 @@ public:
   {
     return receiveTime_;
   }
-/*
-  std::string contentType() const
-  {
-    if(path_.empty())
-      return "";
-
-    if(path_.find(".html") != std::string::npos)
-      return "text/html";
-    if(path_.find(".jpg") != std::string::npos)
-      return "image/jpeg";
-    if(path_.find(".mp4") != std::string::npos)
-      return "video/mp4";
-    if(path_.find(".gif") != std::string::npos)
-      return "image/gif";
-
-    return "text/plain";
-  }
-*/
 private:
   Method method_;
   Version version_;
   std::string path_;
   std::string query_;
+  std::string body_;
   int64_t receiveTime_;
   std::unordered_map<std::string, std::string> header_;
 };

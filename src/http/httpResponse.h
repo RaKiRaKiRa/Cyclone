@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:10
- * Last modified : 2019-09-03 20:46
+ * Last modified : 2019-09-04 16:46
  * Filename      : httpResponse.h
  * Description   : 
  **********************************************************/
@@ -28,10 +28,16 @@ public:
     k404NotFound         = 404, //服务器上没有请求的资源
   };
 
-  explicit httpResponse(bool close) :statusCode_(kUnkown), closeConnection_(close) {}
+  explicit httpResponse(bool close, int keepAlive) :
+    statusCode_(kUnkown), 
+    closeConnection_(close),
+    keepAlive_(keepAlive)
+  {}
+
   ~httpResponse(){  }
   
   // 设置
+  
   void setStatusCode(httpStatusCode code)
   {
     statusCode_ = code;
@@ -67,8 +73,10 @@ public:
     addHeader("Content-Type", fileType);
   }
   
+  // 找不到文件，准备发送404报文
   void setNotFound()
   {
+    header_.clear();
     setStatusCode(k404NotFound);
     setStatusMessage("Not Found");
     setContentType("text/html");
@@ -91,7 +99,7 @@ private:
   httpStatusCode statusCode_;
   std::string statusMessage_;
   bool closeConnection_;
-
+  int keepAlive_;
   std::unordered_map<std::string, std::string> header_;
   std::string body_;
 };

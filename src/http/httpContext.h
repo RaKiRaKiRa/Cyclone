@@ -24,6 +24,7 @@ public:
   
   httpContext();
 
+  // 解析报文
   bool parseRequest(Buffer* buf);
 
   bool getAll()
@@ -48,6 +49,7 @@ public:
   }
 
 private:
+  // 解析报文请求行
   bool parseRequestLine(const char* begin, const char* end);
 
   parseState state_;

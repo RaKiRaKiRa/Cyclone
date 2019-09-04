@@ -51,7 +51,8 @@ private:
   httpCallback httpCallback_;
 
   serverWithHeartBeat server_;
-  std::string keepAliveStr;
+  
+  int keepAliveTime_;
 
 };
 
