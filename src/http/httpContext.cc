@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-28 12:21
- * Last modified : 2019-09-04 22:22
+ * Last modified : 2019-09-05 17:44
  * Filename      : httpContext.cc
  * Description   : 
  **********************************************************/
@@ -102,7 +102,53 @@ bool httpContext::parseRequest(Buffer* buf)
 
 bool httpContext::parseRequestLine(const char* beg, const char* end)
 {
+  // 例如：GET /web/index.html?a=b HTTP/1.1
+  // 分别匹配Method Path （可能有的Query） 和 Version
+  bool success = false;
+  const char* begin = beg;
+  const char* space = std::find(begin, end, ' ');
 
+  // 先匹配Method
+  if(space != end && request_.setMethod(begin, space))
+  {
+    begin = space + 1;
+    space = std::find(begin, end, ' ');
+    // 在匹配Path
+    if(space != end)
+    {
+      // 是否有query
+      const char* query = std::find(begin, space, '?');
+      if(query != space)
+      {
+        request_.setQuery(query, space);
+        request_.setPath(begin, query);
+      }
+      else
+      {
+        request_.setPath(begin, space);
+      }
+
+      // 再匹配Version
+      begin = space + 1;
+      success = (end - begin == 8) && std::equal(begin, end, "HTTP/1.");
+      if(success)
+      {
+        if(*(end - 1) == '1')
+        {
+          request_.setVersion(httpRequest::kHttp11);
+        }
+        else if(*(end - 1) == '0')
+        {
+          request_.setVersion(httpRequest::kHttp10);
+        }
+        else
+        {
+          success = false;
+        }
+      } // <<end if(success)
+    } // <<end if(space != end)
+  } // <<end if(space != end && request_.setMethod(begin, space))
+  return success;
 }
 
 
