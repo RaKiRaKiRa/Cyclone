@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-18 15:34
- * Last modified : 2019-08-28 12:09
+ * Last modified : 2019-09-04 20:44
  * Filename      : Buffer.h
  * Description   : 
  **********************************************************/
@@ -139,6 +139,11 @@ public:
     }
   }
 
+  void retrieveUntil(const char* ch)
+  {
+    retrieve(ch - peek());
+  }
+
   //拿出len字节并转化为字符串返回
   std::string toString(size_t len)
   {
@@ -184,9 +189,14 @@ public:
     std::copy(d, d + len, begin() + readerIndex_);
   }
 
-  void append(std::string& str)
+  void append(const std::string& str)
   {
     append(str.data(), str.size());
+  }
+
+  void append(const char* data)
+  {
+    append(data, strlen(data));
   }
 
 
