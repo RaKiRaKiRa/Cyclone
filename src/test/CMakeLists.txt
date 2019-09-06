@@ -13,3 +13,6 @@ target_link_libraries(echo_test Cyclone_net Cyclone_base)
 
 add_executable(echo_heart echo_heart.cc)
 target_link_libraries(echo_heart Cyclone_net Cyclone_base)
+
+add_executable(httpServer webServer.cc)
+target_link_libraries(httpServer Cyclone_net Cyclone_base)
