@@ -13,6 +13,10 @@ set(SRCS
     EventLoopThreadPool.cc
     Server.cc
     serverWithHeartBeat.cc
+    httpStaticFile.cc
+    httpserver.cc
+    httpContext.cc
+    httpResponse.cc
     Connection.cc
     Buffer.cc
 )
@@ -26,3 +30,5 @@ target_link_libraries(Cyclone_net Cyclone_base)
 
 
 add_subdirectory(test)
+
+
