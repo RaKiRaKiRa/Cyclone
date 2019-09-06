@@ -37,6 +37,7 @@ void serverWithHeartBeat::start()
 
 void serverWithHeartBeat::onConnection(const ConnectionPtr& conn)
 {
+  LOG_DEBUG << toIpPort(conn ->local()) << " -> " << toIpPort(conn -> peer()) << " " << (conn -> connected()?"Up":"Down"); 
   connCallback_(conn);
   
   // 新建立连接，建立新的Entry
@@ -48,13 +49,13 @@ void serverWithHeartBeat::onConnection(const ConnectionPtr& conn)
     // 存于对应Entry
     EntryWeakPtr entryWP(entry);
     entry -> setWP(entryWP);
-    conn -> setAnyPtr(static_cast<void*>(entry.get()));
+    conn -> setEntryPtr(static_cast<void*>(entry.get()));
   }
   // 关闭连接，在connDestroy里调用
   else
   {
-    assert(conn -> getAnyPtr() != NULL);
-    conn -> setAnyPtr(NULL);
+    LOG_DEBUG <<"destruct";
+    assert(conn -> getEntryPtr() != NULL);
   }
 }
 
@@ -64,8 +65,8 @@ void serverWithHeartBeat::onMessage(const ConnectionPtr& conn, Buffer* buffer_)
   messCallback_(conn, buffer_);
 
   // 每次有消息，则重新加入时间轮
-  assert(conn -> getAnyPtr() != NULL);
-  EntryWeakPtr entryWP = static_cast<Entry*>(conn -> getAnyPtr())->getWP();
+  assert(conn -> getEntryPtr() != NULL);
+  EntryWeakPtr entryWP = static_cast<Entry*>(conn -> getEntryPtr())->getWP();
   EntryPtr entry(entryWP.lock());
   if(entry)
   {
@@ -83,7 +84,7 @@ void serverWithHeartBeat::onTimer()
 }
 
 void serverWithHeartBeat::dumpConnectionBuckets() const
-{
+{ 
   if(!printStatus)
     return ;
   LOG_INFO << "size = " << bucketList_.size();
