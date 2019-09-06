@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-29 14:26
- * Last modified : 2019-07-29 22:27
+ * Last modified : 2019-09-06 13:51
  * Filename      : EventLoopThreadPool.cc
  * Description   : 
  **********************************************************/
@@ -40,6 +40,7 @@ void EventLoopThreadPool::start()
     // 主线程调用start()后，子线程detail::startThread => ThreadData::runInThread => func_(),即EventLoopThread::threadFunc()，停留在loop.loop()上
     workloops_.push_back(thread -> start());
   }
+  LOG_DEBUG << "workloops_ has " << workloops_.size() <<" loop";
 }
 
 EventLoop* EventLoopThreadPool::nextLoop()
@@ -56,5 +57,6 @@ EventLoop* EventLoopThreadPool::nextLoop()
     if(static_cast<size_t>(next_) >= workloops_.size())
       next_ = 0;
   }
+  LOG_DEBUG << "choose the loop in " << loop -> threadId();
   return loop;
 }
