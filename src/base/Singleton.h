@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-15 15:46
- * Last modified : 2019-08-18 20:20
+ * Last modified : 2019-09-06 18:53
  * Filename      : Singleton.h
  * Description   : 
  **********************************************************/
@@ -17,13 +17,16 @@ class Singleton
 public:
   static T& Instance()
   {
-    if(obj_ == NULL)
+    T* tmp = obj_;
+    if(tmp == NULL)
     {
       MutexGuard lock(mutex_);
-      if(obj_ == NULL)
+      tmp = obj_;
+      if(tmp == NULL)
       {
-        obj_ = new T();
+        tmp = new T();
         atexit(&Singleton::Destroy);
+        obj_ = tmp;
       }
     }// unlock
     return *obj_;
@@ -42,12 +45,12 @@ private:
   Singleton(const Singleton& obj) = delete;
   Singleton& operator=(const Singleton& obj) = delete;
 
-  static T* volatile obj_;
+  static T*  obj_;
   static MutexLock mutex_;
 };
 
 template<typename T>
-T* volatile Singleton<T>::obj_ = NULL;
+T* Singleton<T>::obj_ = NULL;
 
 template<typename T>
 MutexLock Singleton<T>::mutex_;
