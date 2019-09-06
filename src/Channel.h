@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-15 21:54
- * Last modified : 2019-07-26 22:09
+ * Last modified : 2019-09-06 15:05
  * Filename      : Channel.h
  * Description   : 
  **********************************************************/
@@ -12,6 +12,7 @@
 
 #include "base/noncopyable.h"
 #include <functional>
+#include <memory>
 
 class EventLoop;
 
@@ -129,6 +130,7 @@ public:
   //将自身从EventLoop和对应IPoller内删除
   void remove();
 
+  void tie(const std::shared_ptr<void> &ptr);
 private:
   // 使loop_对Channel的变化进行修改
   void update();
@@ -152,5 +154,8 @@ private:
   Callback writeCallback_;
   Callback errorCallback_;
   Callback closeCallback_;
+
+  std::weak_ptr<void> tie_;
+  bool tied_;
 };
 #endif

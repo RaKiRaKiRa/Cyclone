@@ -24,7 +24,8 @@ Channel::Channel(EventLoop* loop, int fd):
   revents_(0),
   handling_(false),
   index_(-1),
-  addedToLoop_(false)
+  addedToLoop_(false),
+  tied_(false)
 {
 }
 
@@ -33,9 +34,20 @@ Channel::~Channel()
   assert(!handling_);
 }
 
+void Channel::tie(const std::shared_ptr<void> &ptr)
+{
+  tie_ = ptr;
+  tied_ = true;
+}
+
 //分发事件
 void Channel::handleEvent()
 {
+  std::shared_ptr<void> guard;
+  if(tied_)
+  {
+    guard = tie_.lock();
+  }
   handling_ = true;
   //描述符未开事件
   if(revents_ & POLLNVAL)
