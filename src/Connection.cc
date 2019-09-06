@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-18 15:26
- * Last modified : 2019-08-28 16:08
+ * Last modified : 2019-09-06 15:06
  * Filename      : Connection.cc
  * Description   : 
  **********************************************************/
@@ -81,6 +81,7 @@ void Connection::connEstablish()
   setState(kConnected);
   //加入监听列表 启动监听
   //Channel_->enableReading() => Channel::update() => EventLoop::ChannelUpdate() => Poller::ChannelUpdate()
+  //channel_ -> tie(shared_from_this());
   channel_ -> enableRead();
   //连接事件回调
   connCallback_(shared_from_this());

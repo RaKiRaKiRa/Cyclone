@@ -123,6 +123,15 @@ public:
     return anyPtr;
   }
 
+  void setEntryPtr(void* ptr)
+  {
+    entryPtr = ptr;
+  }
+
+  void *getEntryPtr() const
+  {
+    return entryPtr;
+  }
 private:
   enum StateE {kConnecting, kConnected, kDisconnecting, kDisconnected};//连接状态
   void setState(StateE s)
@@ -165,6 +174,7 @@ private:
   Buffer outputBuffer_;
 
   void* anyPtr;
+  void* entryPtr;
 };
   
 #endif
