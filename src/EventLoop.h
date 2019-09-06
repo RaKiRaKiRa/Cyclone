@@ -69,6 +69,11 @@ public:
     return threadId_ == CurrentThread::tid();
   }
 
+  pid_t threadId() const
+  {
+    return threadId_;
+  }
+
   void assertInLoopThread();
   static EventLoop* getEventLoopOfCurrentThread();
   const poller PollerType;
