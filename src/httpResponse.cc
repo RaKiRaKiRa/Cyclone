@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-30 20:57
- * Last modified : 2019-09-04 15:26
+ * Last modified : 2019-09-07 18:34
  * Filename      : httpResponse.cc
  * Description   : 
  **********************************************************/
@@ -28,7 +28,7 @@ void httpResponse::toBuffer(Buffer* buf)
     snprintf(line, sizeof line, "Content-Length: %zd\r\n", body_.size());
     buf -> append(line);
     buf -> append("Connection: Keep-Alive\r\n");
-    snprintf(line, sizeof line, "Keep-Alive: timeout=%d", keepAlive_);
+    snprintf(line, sizeof line, "Keep-Alive: timeout=%d\r\n", keepAlive_);
     buf -> append(line);
   }
 
