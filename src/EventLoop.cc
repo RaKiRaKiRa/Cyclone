@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-07 17:39
- * Last modified : 2019-07-04 22:47
+ * Last modified : 2019-09-23 15:38
  * Filename      : EventLoop.cc
  * Description   : 
  **********************************************************/
@@ -200,7 +200,7 @@ void EventLoop::cancel(TimerId timerId)
 void EventLoop::wakeup()
 {
   uint64_t one = 1;
-  ssize_t n = read(wakeupFd_, &one, sizeof one);
+  ssize_t n = write(wakeupFd_, &one, sizeof one);
   if(n != sizeof one)
   {
     LOG_ERROR << "EventLoop::wakeup() writes "<< n << " bytes instead of 8";
@@ -212,7 +212,7 @@ void EventLoop::wakeup()
 void EventLoop::handleRead()
 {
   uint64_t one = 1;
-  ssize_t n = write(wakeupFd_, &one, sizeof one);
+  ssize_t n = read(wakeupFd_, &one, sizeof one);
   if(n != sizeof one)
   {
     LOG_ERROR << "EventLoop::handleRead() reads "<<n<<" byte instead of 8";
