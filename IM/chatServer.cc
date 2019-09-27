@@ -23,6 +23,7 @@ chatServer::chatServer(EventLoop *loop, const sockaddr_in& addr, int idleSec, in
 void chatServer::onConnection(const ConnectionPtr& conn)
 {
   
+  // disconnected要LoginOut！！！！！
 }
 
 void chatServer::onMessage(const ConnectionPtr& conn, Buffer* buf)

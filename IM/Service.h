@@ -44,12 +44,12 @@ public:
 
   void Handle(int32_t &msgid, ConnectionPtr& conn, Json& json)
   {
-    handleMap[msgid](conn, json);
+    handleMap_[msgid](conn, json);
   }
 
 
 private:
-  std::unordered_map<int32_t, handle> handleMap;
+  std::unordered_map<int32_t, handle> handleMap_;
   
 
 };
