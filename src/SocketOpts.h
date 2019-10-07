@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-09 23:54
- * Last modified : 2019-07-17 21:51
+ * Last modified : 2019-10-07 20:32
  * Filename      : SocketOpts.h
  * Description   : 
  **********************************************************/
@@ -134,7 +134,7 @@ void fromPort(uint16_t port, struct sockaddr_in *addr);
 struct sockaddr_in fromIpPort(const char* ip, uint16_t port);
 struct sockaddr_in fromPort(uint16_t port);
 
-//int getSocketError(int sockfd);
+int getSocketError(int sockfd);
 
 
 struct sockaddr_in getPeerAddr(int sockfd);  

@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-10 15:55
- * Last modified : 2019-07-30 01:34
+ * Last modified : 2019-10-07 20:33
  * Filename      : SocketOpts.cc
  * Description   : 
  **********************************************************/
@@ -268,4 +268,20 @@ struct sockaddr_in getLocalAddr(int sockfd)
     LOG_ERROR << "SocketOpts -- getAddr";
   }
   return addr;
+}
+
+// 只能调用一次，第二次不会报错
+int getSocketError(int sockfd)
+{
+  int optval;
+  socklen_t optlen = static_cast<socklen_t>(sizeof optval);
+  if(getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0)
+  {
+    return errno;
+  }
+  else
+  {
+    return optval;
+  }
+  
 }
