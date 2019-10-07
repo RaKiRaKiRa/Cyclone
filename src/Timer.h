@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-28 20:39
- * Last modified : 2019-06-30 21:21
+ * Last modified : 2019-10-07 20:33
  * Filename      : Timer.h
  * Description   : 
  **********************************************************/
@@ -86,11 +86,20 @@ private:
 class TimerId
 {
 public:
+  TimerId():timer_(NULL), sequence_(0){}
+
   TimerId(Timer* timer, int64_t sequence):
     timer_(timer),
     sequence_(sequence)
-  {
+  {}
 
+  bool isNull()
+  {
+    return timer_ == NULL;
+  }
+  void setNull()
+  {
+    timer_ = NULL;
   }
   friend class TimeQueue;
 
