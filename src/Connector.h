@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-10-06 23:15
- * Last modified : 2019-10-07 20:32
+ * Last modified : 2019-10-10 00:18
  * Filename      : Connector.h
  * Description   : 
  **********************************************************/
@@ -12,6 +12,7 @@
 #include "Socket.h"
 #include "base/noncopyable.h"
 #include "SocketOpts.h"
+#include "Timer.h"
 #include <functional>
 #include <memory>
 
@@ -23,8 +24,8 @@ class Connector: noncopyable, std::enable_shared_from_this<Connector>
 {
 public:
   typedef std::function<void(int)> NewConnCallback;
+  
   Connector(EventLoop* loop, sockaddr_in& addr);
-
   ~Connector();
 
   void setNewConnCallback(NewConnCallback cb)
@@ -39,7 +40,12 @@ public:
   // 将正在连接改为断开连接
   // 若已连接，则无视
   // 断开连接操作由Client和Connection进行 
-  void stop();      
+  void stop();    
+
+  sockaddr_in serverAddr() const 
+  {
+    return serverAddr_;
+  }  
 
 private:
   enum State
@@ -69,6 +75,7 @@ private:
   void handleError();
   int  removeAndResetChannel();// 不能直接reset，需加入runInLoop,在下一次loop中调用，因为正处于Channel::handleEvent
   void resetChannel();
+  void restart(); // 将作为Connection的closeCallback,在非主动关闭时进行重连
   void retry(int sockfd);
 
   EventLoop* loop_;

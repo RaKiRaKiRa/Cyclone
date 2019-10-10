@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-10-07 00:44
- * Last modified : 2019-10-07 20:32
+ * Last modified : 2019-10-10 00:09
  * Filename      : Connector.cc
  * Description   : 
  **********************************************************/
@@ -164,6 +164,16 @@ void Connector::stopInLoop()
     // 防止断开期间又开启
     retry(sockfd);
   }
+}
+
+//仅能由Connection在closeCallback,即Client::removeConnection中调用，用于非主动关闭后的重连
+void Connector::restart()
+{
+  loop_->assertInLoopThread();
+  setState(kDisconnected);
+  retryDelayMs_ = kInitRetryDelayMs;
+  started_ = true;
+  startInLoop();
 }
 
 void Connector::retry(int sockfd)
