@@ -23,7 +23,7 @@ class Channel;
 class Connector: noncopyable, std::enable_shared_from_this<Connector>
 {
 public:
-  typedef std::function<void(int)> NewConnCallback;
+  typedef std::function<void (int)> NewConnCallback;
   
   Connector(EventLoop* loop, sockaddr_in& addr);
   ~Connector();
@@ -41,6 +41,7 @@ public:
   // 若已连接，则无视
   // 断开连接操作由Client和Connection进行 
   void stop();    
+  void restart(); // 将作为Connection的closeCallback,在非主动关闭时进行重连
 
   sockaddr_in serverAddr() const 
   {
@@ -75,7 +76,6 @@ private:
   void handleError();
   int  removeAndResetChannel();// 不能直接reset，需加入runInLoop,在下一次loop中调用，因为正处于Channel::handleEvent
   void resetChannel();
-  void restart(); // 将作为Connection的closeCallback,在非主动关闭时进行重连
   void retry(int sockfd);
 
   EventLoop* loop_;

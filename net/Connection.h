@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-07-16 21:45
- * Last modified : 2019-10-07 20:31
+ * Last modified : 2019-10-10 20:52
  * Filename      : Connection.h
  * Description   : 
  **********************************************************/
@@ -45,7 +45,10 @@ public:
   {
     closeCallback_ = std::move(cb);
   }
-
+  void setWriteCompleteCallback(CloseCallback cb)
+  {
+    writeCompleteCallback_ = std::move(cb);
+  }
   //************************************连接开关*************************
   void connEstablish();     //开启Channel的可读监听并调用connCallback
   void connDestroy();       //关闭Channel的监听并从poll移除,调用connCallback,在handleClose的下一次poll后进行

@@ -91,7 +91,7 @@ void Server::start()
   conn->setMessCallback(messCallback_);
   // removeConn作用是将连接从map中删除，由handleClose调用，再下一轮poll后才移除channel（目的是延长生命周期
   conn->setCloseCallback(std::bind(&Server::removeConn, this, _1));//_1由handleClose调用closeCallback_时传入自身，后传给Connection::connDestroy
-
+  conn->setCompleteCallback(writeCompleteCallback_);
   ioLoop -> runInLoop(std::bind(&Connection::connEstablish, conn));//开启对应Channel可读监听并调用connCallback
 }
 

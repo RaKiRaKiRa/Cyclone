@@ -19,6 +19,8 @@ set(SRCS
     httpResponse.cc
     Connection.cc
     Buffer.cc
+    Connector.cc
+    Client.cc
 )
 add_definitions(-std=c++11)
 include_directories(${PROJECT_SOURCE_DIR}/base)

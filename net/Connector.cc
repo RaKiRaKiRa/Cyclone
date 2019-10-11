@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-10-07 00:44
- * Last modified : 2019-10-10 00:09
+ * Last modified : 2019-10-10 16:54
  * Filename      : Connector.cc
  * Description   : 
  **********************************************************/
@@ -25,7 +25,7 @@ Connector::Connector(EventLoop* loop, sockaddr_in& addr):
 
 Connector::~Connector()
 {
-  if(!id_.isNull)
+  if(!id_.isNull())
   {
     loop_->cancel(id_);
   }
