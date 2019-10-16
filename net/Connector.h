@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-10-06 23:15
- * Last modified : 2019-10-10 00:18
+ * Last modified : 2019-10-17 01:37
  * Filename      : Connector.h
  * Description   : 
  **********************************************************/
@@ -20,7 +20,7 @@ class EventLoop;
 class Channel;
 // 对应Acceptor，主动发起连接，发起的连接用Connection封装，供Client使用
 // socket是一次性的，一旦出错无法恢复。仅仅能关闭重来。使用新的fd后，用新的channel。
-class Connector: noncopyable, std::enable_shared_from_this<Connector>
+class Connector: public noncopyable, public std::enable_shared_from_this<Connector>
 {
 public:
   typedef std::function<void (int)> NewConnCallback;
