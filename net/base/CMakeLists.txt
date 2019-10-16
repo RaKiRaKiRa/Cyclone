@@ -6,6 +6,7 @@ set(LIB_SRC
     Thread.cc
     FileUtil.cc      
     Logging.cc
+    Daemon.cc
 )
 add_definitions(-std=c++11)
 add_library(Cyclone_base ${LIB_SRC})
