@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-06-07 17:39
- * Last modified : 2019-10-09 23:50
+ * Last modified : 2019-10-18 14:34
  * Filename      : EventLoop.cc
  * Description   : 
  **********************************************************/
@@ -11,7 +11,7 @@
 #include "IPoller.h"
 #include "Channel.h"
 #include "TimeQueue.h"
-
+#include <sys/signal.h>
 #include <sys/eventfd.h>
 // 当前线程中的EventLoop, 保证one loop per thread
 __thread EventLoop *t_loopInThisThread = 0;
@@ -26,6 +26,17 @@ int createEventfd()
   }
   return fd;
 }
+
+class IgnoreSigPipe
+{
+public:
+  IgnoreSigPipe()
+  {
+    signal(SIGPIPE, SIG_IGN);
+    LOG_INFO << "Ignore SigPipe";
+  }
+};
+IgnoreSigPipe ignoreSigPipe();
 
 EventLoop::EventLoop(int timeout, poller type):
   PollerType(type),
