@@ -36,7 +36,7 @@ public:
     LOG_INFO << "Ignore SigPipe";
   }
 };
-IgnoreSigPipe ignoreSigPipe();
+IgnoreSigPipe ignoreSigPipe;
 
 EventLoop::EventLoop(int timeout, poller type):
   PollerType(type),
