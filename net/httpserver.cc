@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 19:40
- * Last modified : 2019-09-04 18:52
+ * Last modified : 2019-11-17 19:57
  * Filename      : httpserver.cc
  * Description   : 
  **********************************************************/
@@ -126,6 +126,8 @@ void httpServer::staticSourceRequest(httpRequest& request, httpResponse* respons
   std::string filename = request.path();
   if(filename == "/" || filename == "")
     filename = "/index.html";
+  else if(filename[filename.size() - 1] == '/')
+    filename += "index.html";
   filename = webPath + filename;
   StaticFile sFile(filename);
   // 若读取文件进入body成功
