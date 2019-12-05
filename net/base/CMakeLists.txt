@@ -8,6 +8,7 @@ set(LIB_SRC
     Logging.cc
     Daemon.cc
 )
+include_directories(${PROJECT_SOURCE_DIR})
 add_definitions(-std=c++11)
 add_library(Cyclone_base ${LIB_SRC})
 target_link_libraries(Cyclone_base pthread rt)

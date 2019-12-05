@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-10-08 21:21
- * Last modified : 2019-10-10 15:45
+ * Last modified : 2019-11-16 01:54
  * Filename      : Client.h
  * Description   : 
  **********************************************************/
@@ -85,7 +85,7 @@ private:
     int nextConnId_;
     bool retry_;
     bool connect_;
-
+    Timer* retryTimer_;
     MutexLock mutex_;
 };
 

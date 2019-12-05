@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-10-08 21:41
- * Last modified : 2019-10-10 16:56
+ * Last modified : 2019-11-16 02:02
  * Filename      : Client.cc
  * Description   : 
  **********************************************************/
@@ -100,8 +100,7 @@ void Client::connect()
 
 void Client::disconnect()
 {
-//    if(connect_ == false) 
-//        return;
+
     //停止连接后依然可能由连接存在
     connect_ = false;
     {
@@ -141,6 +140,7 @@ void Client::newConnection(int sockfd)
     conn->connEstablish();
 }
 
+// 作为CloseCallback，当发现关闭时connect_为true，启动重连
 void Client::removeConnection(const ConnectionPtr& conn)
 {
     loop_->assertInLoopThread();
@@ -154,11 +154,11 @@ void Client::removeConnection(const ConnectionPtr& conn)
         // 计数-1，仅靠connDestroy的参数，延续了本函数的参数
         connection_.reset();
     }
-
+    // STAR!!!
     // 尝试重连，在一定时间后调用Connector::startInLoop
     if(retry_ && connect_)
     {
-        LOG_TRACE << "connect [" << name_ << "] reconnect to " << toIpPort(connector_ -> serverAddr());
+        LOG_TRACE << "connect [" << name_ << "] Reconnect to " << toIpPort(connector_ -> serverAddr());
         connector_->restart();
     }
 }
