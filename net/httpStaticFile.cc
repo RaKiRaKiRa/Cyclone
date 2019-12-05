@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-30 23:49
- * Last modified : 2019-08-31 20:08
+ * Last modified : 2019-12-06 02:25
  * Filename      : httpStaticFile.cc
  * Description   : 
  **********************************************************/
@@ -21,6 +21,30 @@ StaticFile::StaticFile(std::string filename):
   {
     state_ = NotFound;
     LOG_DEBUG << file_ << " NotFound";
+  }
+  // 如果是文件夹
+  else if((sbuf_.st_mode & S_IFMT) == S_IFDIR)
+  {
+    //读文件夹的index
+    if(file_.back() == '/')
+    {
+      file_.append("index.html");
+    }
+    else
+    {
+      file_.append("/index.html");
+    }
+
+    if(stat(file_.c_str(), &sbuf_) < 0)
+    {
+      state_ = NotFound;
+      LOG_DEBUG << file_ << " NotFound";
+    }
+    else
+    {
+      state_ = OK;
+      LOG_DEBUG << file_ << " OK";
+    }
   }
   else
   {
