@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-18 23:11
- * Last modified : 2019-09-01 20:23
+ * Last modified : 2020-02-08 15:47
  * Filename      : serverWithHeartBeat.h
  * Description   : 
  **********************************************************/
@@ -107,6 +107,7 @@ private:
   void onMessage(const ConnectionPtr& conn, Buffer* buffer_);
   void onWriteComplete(const ConnectionPtr& conn);
   void onTimer();
+  void addEntry(const EntryPtr& entry);
   void dumpConnectionBuckets() const;
 
   ConnCallback          connCallback_;

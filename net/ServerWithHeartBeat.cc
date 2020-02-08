@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-19 11:38
- * Last modified : 2019-09-01 20:23
+ * Last modified : 2020-02-08 15:47
  * Filename      : serverWithHeartBeat.cc
  * Description   : 
  **********************************************************/
@@ -19,7 +19,6 @@ serverWithHeartBeat::serverWithHeartBeat(EventLoop* loop,const sockaddr_in& list
   server_.setConnCallback(std::bind(&serverWithHeartBeat::onConnection, this, _1));
   server_.setMessCallback(std::bind(&serverWithHeartBeat::onMessage, this, _1, _2));
   server_.setWriteCompleteCallback(writeCompleteCallback_);
-
   loop -> runEvery(1.0, std::bind(&serverWithHeartBeat::onTimer, this));
   bucketList_.resize(idleSec);
   dumpConnectionBuckets();
@@ -35,6 +34,7 @@ void serverWithHeartBeat::start()
   server_.start();
 }
 
+// 在SubLoop
 void serverWithHeartBeat::onConnection(const ConnectionPtr& conn)
 {
   LOG_DEBUG << toIpPort(conn ->local()) << " -> " << toIpPort(conn -> peer()) << " " << (conn -> connected()?"Up":"Down"); 
@@ -44,12 +44,18 @@ void serverWithHeartBeat::onConnection(const ConnectionPtr& conn)
   if(conn -> connected())
   {
     EntryPtr entry(new Entry(conn));
-    bucketList_.back().insert(entry);
-    dumpConnectionBuckets();
+
     // 存于对应Entry
     EntryWeakPtr entryWP(entry);
     entry -> setWP(entryWP);
     conn -> setEntryPtr(static_cast<void*>(entry.get()));
+    /*
+    // 在SubLoop
+    bucketList_.back().insert(entry);
+    dumpConnectionBuckets();
+    */
+    // 在MainLoop
+    addEntry(entry);
   }
   // 关闭连接，在connDestroy里调用
   else
@@ -70,16 +76,29 @@ void serverWithHeartBeat::onMessage(const ConnectionPtr& conn, Buffer* buffer_)
   EntryPtr entry(entryWP.lock());
   if(entry)
   {
+    /*
+    // 在SubLoop
     bucketList_.back().insert(entry);
     dumpConnectionBuckets();
+    */
+    // 在MainLoop
+    addEntry(entry);
   }
   
 }
 
+// 在MainLoop, UpdataBucket
 void serverWithHeartBeat::onTimer()
 {
   bucketList_.pop_front();
   bucketList_.push_back(Bucket());
+  dumpConnectionBuckets();
+}
+
+// 在MainLoop
+void serverWithHeartBeat::addEntry(const EntryPtr& entry)
+{
+  bucketList_.back().insert(entry);
   dumpConnectionBuckets();
 }
 

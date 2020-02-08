@@ -7,7 +7,7 @@
  * Description   : 
  **********************************************************/
 
-#include "httpStaticFile.h"
+#include "HttpStaticFile.h"
 #include "base/Logging.h"
 #include <unistd.h>
 #include <sys/mman.h>

@@ -2,14 +2,14 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:09
- * Last modified : 2019-08-28 15:59
+ * Last modified : 2020-02-08 15:57
  * Filename      : httpContext.h
  * Description   : 
  **********************************************************/
 #ifndef HTTPCONTEXT_H
 #define HTTPCONTEXT_H
-#include "httpRequest.h"
-#include "httpserver.h"
+#include "HttpRequest.h"
+#include "Httpserver.h"
 
 class httpContext
 {
