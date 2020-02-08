@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "base/Singleton.h"
-#include "httpType.h"
+#include "HttpType.h"
 
 class StaticFile
 {

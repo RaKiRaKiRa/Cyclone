@@ -2,7 +2,7 @@
  * Author        : RaKiRaKiRa
  * Email         : 763600693@qq.com
  * Create time   : 2019-08-27 20:10
- * Last modified : 2019-09-04 16:46
+ * Last modified : 2020-02-08 16:02
  * Filename      : httpResponse.h
  * Description   : 
  **********************************************************/
@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <map>
 #include <string>
-#include "httpStaticFile.h"
+#include "HttpStaticFile.h"
 
 class httpResponse
 {

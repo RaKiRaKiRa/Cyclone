@@ -10,7 +10,7 @@
 #define HTTPSERVER_H
 
 #include <iostream>
-#include "serverWithHeartBeat.h"
+#include "ServerWithHeartBeat.h"
 
 class httpRequest;
 class httpResponse;

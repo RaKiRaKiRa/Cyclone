@@ -6,10 +6,10 @@
  * Filename      : httpserver.cc
  * Description   : 
  **********************************************************/
-#include "httpserver.h"
-#include "httpContext.h"
-#include "httpResponse.h"
-#include "httpStaticFile.h"
+#include "Httpserver.h"
+#include "HttpContext.h"
+#include "HttpResponse.h"
+#include "HttpStaticFile.h"
 #include "Connection.h"
 #include <string.h>
 #include <string>
