@@ -114,6 +114,7 @@ private:
   MessCallback          messCallback_;
   WriteCompleteCallback writeCompleteCallback_;
   Server server_;
+  EventLoop *loop_;
   BucketList bucketList_;
 
   bool printStatus;

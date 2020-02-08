@@ -122,6 +122,8 @@ void httpServer::staticSourceRequest(httpRequest& request, httpResponse* respons
     char tmpPath[80];
     getcwd(tmpPath, 80);
     webPath = tmpPath;
+    webPath += "/public";
+    LOG_INFO << "webPath = " << webPath;
   }
   std::string filename = request.path();
   if(filename == "/" || filename == "")

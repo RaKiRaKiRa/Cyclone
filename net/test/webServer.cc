@@ -21,13 +21,13 @@ void output(const char* logline, int len)
 int main()
 {
   Daemon();
-  logptr = new AsyncLogging("asynclog", 50*1024*1000);
+  logptr = new AsyncLogging("log", 50*1024*1000);
   Logger::setOutput(output);
   logptr -> start();
-  setLogLevel(Logger::DEBUG);
+  setLogLevel(Logger::INFO);
   EventLoop loop;
   sockaddr_in lis = fromPort(80);
-  httpServer myServer(&loop, lis, 4, 60);
+  httpServer myServer(&loop, lis, 2, 60);
   myServer.start();
   loop.loop();
 }

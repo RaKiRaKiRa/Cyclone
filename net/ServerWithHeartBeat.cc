@@ -12,6 +12,7 @@
 
 serverWithHeartBeat::serverWithHeartBeat(EventLoop* loop,const sockaddr_in& listenAddr, const std::string& name, bool ReusePort, int idleSec):
   server_(loop, listenAddr, name, ReusePort),
+  loop_(loop),
   bucketList_(idleSec),
   printStatus(false),
   idleSec_(idleSec)
@@ -55,7 +56,7 @@ void serverWithHeartBeat::onConnection(const ConnectionPtr& conn)
     dumpConnectionBuckets();
     */
     // 在MainLoop
-    addEntry(entry);
+    loop_->runInLoop(std::bind(&serverWithHeartBeat::addEntry, this, entry));
   }
   // 关闭连接，在connDestroy里调用
   else
@@ -82,7 +83,7 @@ void serverWithHeartBeat::onMessage(const ConnectionPtr& conn, Buffer* buffer_)
     dumpConnectionBuckets();
     */
     // 在MainLoop
-    addEntry(entry);
+    loop_->runInLoop(std::bind(&serverWithHeartBeat::addEntry, this, entry));
   }
   
 }
