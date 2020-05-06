@@ -12,11 +12,11 @@ set(SRCS
     Acceptor.cc
     EventLoopThreadPool.cc
     Server.cc
-    serverWithHeartBeat.cc
-    httpStaticFile.cc
-    httpserver.cc
-    httpContext.cc
-    httpResponse.cc
+    ServerWithHeartBeat.cc
+    HttpStaticFile.cc
+    Httpserver.cc
+    HttpContext.cc
+    HttpResponse.cc
     Connection.cc
     Buffer.cc
     Connector.cc
